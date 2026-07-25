@@ -37,6 +37,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local order log (API may write here in dev)
+data/orders.json
+!data/.gitkeep
+
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
