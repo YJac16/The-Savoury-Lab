@@ -6,6 +6,7 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
+import {ProductPrice} from './ProductPrice';
 import type {ProductFragment} from 'storefrontapi.generated';
 
 export function ProductForm({
@@ -17,16 +18,40 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
+
   return (
-    <div className="product-form">
+    <div className="product-form space-y-8">
+      {selectedVariant?.price && (
+        <div className="border-b border-neutral-muted pb-6">
+          <p className="eyebrow mb-2">Price</p>
+          <ProductPrice
+            price={selectedVariant.price}
+            compareAtPrice={selectedVariant.compareAtPrice}
+          />
+        </div>
+      )}
+
       {productOptions.map((option) => {
-        // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
 
         return (
-          <div className="product-options" key={option.name}>
-            <h5>{option.name}</h5>
-            <div className="product-options-grid">
+          <fieldset className="product-options" key={option.name}>
+            <legend className="mb-4 text-xs font-medium uppercase tracking-[0.14em] text-brand">
+              {option.name}
+              {selectedVariant?.selectedOptions?.find(
+                (item) => item.name === option.name,
+              )?.value && (
+                <span className="ml-2 normal-case tracking-normal text-ink-muted">
+                  —{' '}
+                  {
+                    selectedVariant.selectedOptions.find(
+                      (item) => item.name === option.name,
+                    )?.value
+                  }
+                </span>
+              )}
+            </legend>
+            <div className="flex flex-wrap gap-2">
               {option.optionValues.map((value) => {
                 const {
                   name,
@@ -39,87 +64,82 @@ export function ProductForm({
                   swatch,
                 } = value;
 
+                const pillClass = [
+                  'inline-flex min-h-11 min-w-[3.5rem] items-center justify-center border px-4 py-2 text-sm font-medium transition-all duration-300',
+                  selected
+                    ? 'border-accent bg-accent/10 text-brand ring-1 ring-accent'
+                    : 'border-neutral-muted text-brand hover:border-accent',
+                  !available || !exists ? 'cursor-not-allowed opacity-40' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ');
+
+                const label = <ProductOptionSwatch swatch={swatch} name={name} />;
+
                 if (isDifferentProduct) {
-                  // SEO
-                  // When the variant is a combined listing child product
-                  // that leads to a different url, we need to render it
-                  // as an anchor tag
                   return (
                     <Link
-                      className="product-options-item"
+                      className={pillClass}
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
-                      style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
+                      aria-label={`${option.name}: ${name}`}
+                      aria-current={selected ? 'true' : undefined}
                     >
-                      <ProductOptionSwatch swatch={swatch} name={name} />
+                      {label}
                     </Link>
                   );
-                } else {
-                  // SEO
-                  // When the variant is an update to the search param,
-                  // render it as a button with javascript navigating to
-                  // the variant so that SEO bots do not index these as
-                  // duplicated links
-                  return (
-                    <button
-                      type="button"
-                      className={`product-options-item${
-                        exists && !selected ? ' link' : ''
-                      }`}
-                      key={option.name + name}
-                      style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
-                      disabled={!exists}
-                      onClick={() => {
-                        if (!selected) {
-                          void navigate(`?${variantUriQuery}`, {
-                            replace: true,
-                            preventScrollReset: true,
-                          });
-                        }
-                      }}
-                    >
-                      <ProductOptionSwatch swatch={swatch} name={name} />
-                    </button>
-                  );
                 }
+
+                return (
+                  <button
+                    type="button"
+                    className={pillClass}
+                    key={option.name + name}
+                    disabled={!exists}
+                    aria-label={`${option.name}: ${name}`}
+                    aria-pressed={selected}
+                    onClick={() => {
+                      if (!selected) {
+                        void navigate(`?${variantUriQuery}`, {
+                          replace: true,
+                          preventScrollReset: true,
+                        });
+                      }
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
               })}
             </div>
-            <br />
-          </div>
+          </fieldset>
         );
       })}
-      <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          open('cart');
-        }}
-        lines={
-          selectedVariant
-            ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                  selectedVariant,
-                },
-              ]
-            : []
-        }
-      >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-      </AddToCartButton>
+
+      <div className="hidden lg:block">
+        <AddToCartButton
+          disabled={!selectedVariant || !selectedVariant.availableForSale}
+          onClick={() => open('cart')}
+          lines={
+            selectedVariant
+              ? [
+                  {
+                    merchandiseId: selectedVariant.id,
+                    quantity: 1,
+                    selectedVariant,
+                  },
+                ]
+              : []
+          }
+        >
+          <span className="btn-primary w-full min-h-12">
+            {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+          </span>
+        </AddToCartButton>
+      </div>
     </div>
   );
 }
@@ -134,17 +154,25 @@ function ProductOptionSwatch({
   const image = swatch?.image?.previewImage?.url;
   const color = swatch?.color;
 
-  if (!image && !color) return name;
+  if (image) {
+    return (
+      <img
+        src={image}
+        alt={name}
+        className="h-8 w-8 rounded-full object-cover"
+      />
+    );
+  }
 
-  return (
-    <div
-      aria-label={name}
-      className="product-option-label-swatch"
-      style={{
-        backgroundColor: color || 'transparent',
-      }}
-    >
-      {!!image && <img src={image} alt={name} />}
-    </div>
-  );
+  if (color) {
+    return (
+      <span
+        aria-label={name}
+        className="inline-flex h-8 w-8 rounded-full border border-neutral-muted"
+        style={{backgroundColor: color}}
+      />
+    );
+  }
+
+  return <span>{name}</span>;
 }

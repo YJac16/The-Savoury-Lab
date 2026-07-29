@@ -1,6 +1,144 @@
 /**
- * Configure Tailwind v4 in this file using CSS variables and directives:
- * https://tailwindcss.com/docs/v4-beta#css-first-configuration
+ * The Savoury Lab — Tailwind v4 design tokens & utilities
+ * https://tailwindcss.com/docs/v4
  */
 
 @import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Playfair Display', ui-serif, Georgia, 'Times New Roman',
+    serif;
+
+  --color-brand: #111111;
+  --color-brand-inverse: #ffffff;
+  --color-accent: #c79a52;
+  --color-accent-soft: #d4b07a;
+  --color-neutral: #f7f7f7;
+  --color-neutral-muted: #e8e8e8;
+  --color-ink-muted: #6b6b6b;
+  --color-success: #2f855a;
+  --color-error: #dc2626;
+
+  --shadow-soft: 0 16px 48px rgba(17, 17, 17, 0.08);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-brand-inverse font-sans text-brand antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-medium tracking-tight text-brand;
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-premium {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  .section-pad {
+    @apply py-16 sm:py-20 lg:py-28;
+  }
+
+  .eyebrow {
+    @apply font-sans text-[0.7rem] font-medium uppercase tracking-[0.18em] text-accent;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-12 items-center justify-center bg-accent px-8 py-3 font-sans text-[0.7rem] font-medium uppercase tracking-[0.18em] text-brand transition-all duration-300 hover:bg-accent-soft focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-12 items-center justify-center border border-brand-inverse/40 bg-transparent px-8 py-3 font-sans text-[0.7rem] font-medium uppercase tracking-[0.18em] text-brand-inverse transition-all duration-300 hover:border-accent hover:bg-accent hover:text-brand focus-visible:outline-offset-4;
+  }
+
+  .btn-outline {
+    @apply inline-flex min-h-12 items-center justify-center border border-brand px-8 py-3 font-sans text-[0.7rem] font-medium uppercase tracking-[0.18em] text-brand transition-all duration-300 hover:border-accent hover:bg-accent focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    transition: background-size 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-underline:hover,
+  .link-underline[aria-current='page'] {
+    background-size: 100% 1px;
+  }
+
+  .products-grid {
+    @apply grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .collections-grid {
+    @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    z-index: 100;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    background: var(--color-accent);
+    color: var(--color-brand);
+    padding: 0.75rem 1rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}

@@ -4,9 +4,15 @@ import {Image, getPaginationVariables} from '@shopify/hydrogen';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {buildSeo} from '~/lib/seo';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
+export const meta: Route.MetaFunction = ({data, params}) => {
+  const title = data?.blog.title ?? 'Blog';
+  return buildSeo({
+    title,
+    description: `${title} — articles from The Savoury Lab.`,
+    path: params.blogHandle ? `/blogs/${params.blogHandle}` : '/blogs',
+  });
 };
 
 export async function loader(args: Route.LoaderArgs) {

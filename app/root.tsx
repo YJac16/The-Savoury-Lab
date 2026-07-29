@@ -10,6 +10,7 @@ import {
   ScrollRestoration,
   useRouteLoaderData,
 } from 'react-router';
+import type {ComponentProps, ReactNode} from 'react';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
@@ -17,6 +18,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {AnalyticsScripts} from './components/AnalyticsScripts';
 
 export type RootLoader = typeof loader;
 
@@ -56,6 +58,19 @@ export function links() {
   return [
     {
       rel: 'preconnect',
+      href: 'https://fonts.googleapis.com',
+    },
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.gstatic.com',
+      crossOrigin: 'anonymous',
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap',
+    },
+    {
+      rel: 'preconnect',
       href: 'https://cdn.shopify.com',
     },
     {
@@ -79,6 +94,10 @@ export async function loader(args: Route.LoaderArgs) {
     ...deferredData,
     ...criticalData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
+    analyticsIds: {
+      ga: env.PUBLIC_GA_MEASUREMENT_ID || undefined,
+      metaPixel: env.PUBLIC_META_PIXEL_ID || undefined,
+    },
     shop: getShopAnalytics({
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
@@ -135,18 +154,30 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       console.error(error);
       return null;
     });
+
+  const recommendedProducts = storefront
+    .query(RECOMMENDED_PRODUCTS_QUERY, {
+      cache: storefront.CacheLong(),
+    })
+    .then((result) => result.products.nodes)
+    .catch((error: Error) => {
+      console.error(error);
+      return [];
+    });
+
   return {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
     footer,
+    recommendedProducts,
   };
 }
 
-export function Layout({children}: {children?: React.ReactNode}) {
+export function Layout({children}: {children?: ReactNode}) {
   const nonce = useNonce();
 
   return (
-    <html lang="en">
+    <html lang="en-ZA">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -174,13 +205,14 @@ export default function App() {
 
   return (
     <Analytics.Provider
-      cart={data.cart}
+      cart={data.cart as ComponentProps<typeof Analytics.Provider>['cart']}
       shop={data.shop}
       consent={data.consent}
     >
       <PageLayout {...data}>
         <Outlet />
       </PageLayout>
+      <AnalyticsScripts />
     </Analytics.Provider>
   );
 }
@@ -198,14 +230,61 @@ export function ErrorBoundary() {
   }
 
   return (
-    <div className="route-error">
-      <h1>Oops</h1>
-      <h2>{errorStatus}</h2>
-      {errorMessage && (
-        <fieldset>
-          <pre>{errorMessage}</pre>
-        </fieldset>
+    <div className="flex min-h-[100svh] flex-col items-center justify-center bg-neutral px-6 py-16 text-center">
+      <p className="eyebrow mb-4">Something went wrong</p>
+      <h1 className="font-display text-6xl text-brand">{errorStatus}</h1>
+      <p className="mt-4 max-w-md text-sm text-ink-muted">
+        {errorStatus === 404
+          ? 'The page you are looking for could not be found.'
+          : 'We apologize for the inconvenience. Please try again or return home.'}
+      </p>
+      {errorMessage && errorStatus !== 404 && (
+        <details className="mt-8 max-w-lg text-left">
+          <summary className="cursor-pointer text-xs uppercase tracking-[0.14em] text-ink-muted">
+            Technical details
+          </summary>
+          <pre className="mt-3 overflow-auto rounded-sm border border-neutral-muted bg-brand-inverse p-4 text-left text-xs text-brand">
+            {errorMessage}
+          </pre>
+        </details>
       )}
+      <a href="/" className="btn-primary mt-10">
+        Return home
+      </a>
     </div>
   );
 }
+
+const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  query CartRecommendedProducts($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 4, sortKey: BEST_SELLING) {
+      nodes {
+        id
+        title
+        handle
+        featuredImage {
+          id
+          url
+          altText
+          width
+          height
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+          maxVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        selectedOrFirstAvailableVariant {
+          id
+          availableForSale
+        }
+      }
+    }
+  }
+` as const;

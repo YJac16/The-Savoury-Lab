@@ -1,0 +1,17 @@
+node_modules
+node_modules_trash
+node_modules_bad_*
+.git
+.cache
+build
+dist
+.mf
+.shopify
+.react-router
+debug.log
+npm-fm.log
+*.log
+npm-install.log
+.env
+.env.*
+!.env.example

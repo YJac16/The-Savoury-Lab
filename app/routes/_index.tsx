@@ -1,176 +1,127 @@
-import {Await, useLoaderData, Link} from 'react-router';
+import {useLoaderData} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense} from 'react';
-import {Image} from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
-import {MockShopNotice} from '~/components/MockShopNotice';
+import {Hero} from '~/components/home/Hero';
+import {FeaturedCategories} from '~/components/home/FeaturedCategories';
+import {BestSellers} from '~/components/home/BestSellers';
+import {WhyChooseUs} from '~/components/home/WhyChooseUs';
+import {CustomerReviews} from '~/components/home/CustomerReviews';
+import {HowItWorks} from '~/components/home/HowItWorks';
+import {WholesaleCta} from '~/components/home/WholesaleCta';
+import {InstagramFeed} from '~/components/home/InstagramFeed';
+import {NewsletterForm} from '~/components/NewsletterForm';
+import {FaqAccordion} from '~/components/FaqAccordion';
+import {JsonLd} from '~/components/JsonLd';
+import {buildSeo, faqJsonLd, organizationJsonLd} from '~/lib/seo';
+import {FAQ_ITEMS} from '~/lib/brand';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return buildSeo({
+    description:
+      'Premium Halaal handcrafted frozen savouries from Kenilworth, Cape Town. Shop samoosas, pies, spring rolls and more.',
+    path: '/',
+  });
 };
 
-export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
+export async function loader({context}: Route.LoaderArgs) {
+  const {storefront, env} = context;
 
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{collections}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
+  const [{collections}, {products}] = await Promise.all([
+    storefront.query(HOMEPAGE_COLLECTIONS_QUERY),
+    storefront.query(HOMEPAGE_PRODUCTS_QUERY),
   ]);
 
-  return {
-    isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
-    featuredCollection: collections.nodes[0],
-  };
-}
-
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context}: Route.LoaderArgs) {
-  const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
-    .catch((error: Error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
-      return null;
-    });
+  const heroImage =
+    collections.nodes.find(
+      (node: {image?: {url?: string} | null}) => Boolean(node.image),
+    )?.image?.url ?? undefined;
 
   return {
-    recommendedProducts,
+    collections: collections.nodes,
+    products: products.nodes,
+    heroImage,
+    heroVideoUrl: env.PUBLIC_HERO_VIDEO_URL || undefined,
   };
 }
 
 export default function Homepage() {
-  const data = useLoaderData<typeof loader>();
-  return (
-    <div className="home">
-      {data.isShopLinked ? null : <MockShopNotice />}
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
-    </div>
-  );
-}
+  const {collections, products, heroImage, heroVideoUrl} =
+    useLoaderData<typeof loader>();
 
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
   return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image
-            data={image}
-            sizes="100vw"
-            alt={image.altText || collection.title}
-          />
+    <>
+      <JsonLd data={[organizationJsonLd(), faqJsonLd(FAQ_ITEMS)]} />
+      <Hero posterUrl={heroImage} videoUrl={heroVideoUrl} />
+      <FeaturedCategories collections={collections} />
+      <BestSellers products={products} />
+      <WhyChooseUs />
+      <CustomerReviews />
+      <HowItWorks />
+      <WholesaleCta />
+      <InstagramFeed collections={collections} />
+      <section className="section-pad bg-brand-inverse">
+        <div className="container-premium grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+          <NewsletterForm />
+          <div>
+            <p className="eyebrow mb-3">FAQ</p>
+            <h2 className="mb-8 text-balance text-3xl sm:text-4xl">
+              Questions answered
+            </h2>
+            <FaqAccordion />
+          </div>
         </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
+      </section>
+    </>
   );
 }
 
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery | null>;
-}) {
-  return (
-    <section
-      className="recommended-products"
-      aria-labelledby="recommended-products"
-    >
-      <h2 id="recommended-products">Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </section>
-  );
-}
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
+const HOMEPAGE_COLLECTIONS_QUERY = `#graphql
+  query HomepageCollections($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
+    collections(first: 12, sortKey: UPDATED_AT, reverse: true) {
       nodes {
-        ...FeaturedCollection
+        handle
+        title
+        image {
+          id
+          url
+          altText
+          width
+          height
+        }
       }
     }
   }
 ` as const;
 
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    featuredImage {
-      id
-      url
-      altText
-      width
-      height
-    }
-  }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
+const HOMEPAGE_PRODUCTS_QUERY = `#graphql
+  query HomepageProducts($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 8, sortKey: BEST_SELLING) {
       nodes {
-        ...RecommendedProduct
+        id
+        title
+        handle
+        featuredImage {
+          id
+          url
+          altText
+          width
+          height
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+          maxVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        selectedOrFirstAvailableVariant {
+          id
+          availableForSale
+        }
       }
     }
   }

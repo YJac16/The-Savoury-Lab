@@ -1,9 +1,18 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {buildSeo} from '~/lib/seo';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
+  const title = data?.page.seo?.title || data?.page.title || 'Page';
+  const description =
+    data?.page.seo?.description ||
+    `${title} — The Savoury Lab, handcrafted frozen savouries in Cape Town.`;
+  return buildSeo({
+    title,
+    description,
+    path: data?.page.handle ? `/pages/${data.page.handle}` : undefined,
+  });
 };
 
 export async function loader(args: Route.LoaderArgs) {

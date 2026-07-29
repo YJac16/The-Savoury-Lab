@@ -1,4 +1,6 @@
 node_modules
+node_modules_trash
+node_modules_bad_*
 /.cache
 /build
 /dist
@@ -7,3 +9,11 @@ node_modules
 .env
 .shopify
 .react-router
+.vercel
+debug.log
+npm-fm.log
+*.log
+npm-install.log
+*.tsbuildinfo
+
+.vercel

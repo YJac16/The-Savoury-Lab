@@ -3,11 +3,17 @@ import type {Route} from './+types/blogs._index';
 import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import type {BlogsQuery} from 'storefrontapi.generated';
+import {buildSeo} from '~/lib/seo';
 
 type BlogNode = BlogsQuery['blogs']['nodes'][0];
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Blogs`}];
+  return buildSeo({
+    title: 'Blogs',
+    description:
+      'Stories, recipes, and news from The Savoury Lab frozen savouries kitchen.',
+    path: '/blogs',
+  });
 };
 
 export async function loader(args: Route.LoaderArgs) {

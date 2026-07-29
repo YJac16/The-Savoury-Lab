@@ -1,11 +1,26 @@
-import {useLoaderData, data, type HeadersFunction} from 'react-router';
+import {
+  Await,
+  useLoaderData,
+  useRouteLoaderData,
+  data,
+  type HeadersFunction,
+} from 'react-router';
+import {Suspense} from 'react';
 import type {Route} from './+types/cart';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
 import {CartMain} from '~/components/CartMain';
+import {buildSeo} from '~/lib/seo';
+import type {RootLoader} from '~/root';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Cart`}];
+  return buildSeo({
+    title: 'Cart',
+    description:
+      'Review your handcrafted frozen savouries. Collection or local Cape Town delivery at checkout.',
+    path: '/cart',
+    noIndex: true,
+  });
 };
 
 export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
@@ -103,11 +118,41 @@ export async function loader({context}: Route.LoaderArgs) {
 
 export default function Cart() {
   const cart = useLoaderData<typeof loader>();
+  const rootData = useRouteLoaderData<RootLoader>('root');
 
   return (
-    <div className="cart">
-      <h1>Cart</h1>
-      <CartMain layout="page" cart={cart} />
+    <div className="bg-brand-inverse">
+      <div className="border-b border-neutral-muted bg-neutral">
+        <div className="container-premium py-12 sm:py-16">
+          <p className="eyebrow mb-3">Cart</p>
+          <h1 className="text-4xl sm:text-5xl">Your order</h1>
+          <p className="mt-3 max-w-lg text-sm text-ink-muted">
+            Review quantities, apply discounts, then proceed to secure Shopify
+            Checkout for collection or local delivery.
+          </p>
+        </div>
+      </div>
+      <div className="container-premium section-pad">
+        <div className="mx-auto max-w-3xl">
+          <Suspense
+            fallback={<CartMain layout="page" cart={cart} />}
+          >
+            {rootData?.recommendedProducts ? (
+              <Await resolve={rootData.recommendedProducts}>
+                {(products) => (
+                  <CartMain
+                    layout="page"
+                    cart={cart}
+                    recommendedProducts={products}
+                  />
+                )}
+              </Await>
+            ) : (
+              <CartMain layout="page" cart={cart} />
+            )}
+          </Suspense>
+        </div>
+      </div>
     </div>
   );
 }

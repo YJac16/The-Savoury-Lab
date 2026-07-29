@@ -1,96 +1,114 @@
-import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Suspense, useEffect, useState} from 'react';
+import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
   useOptimisticCart,
 } from '@shopify/hydrogen';
-import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
+import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {Logo} from '~/components/Logo';
+import {NAV_LINKS} from '~/lib/brand';
 
 interface HeaderProps {
   header: HeaderQuery;
   cart: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
+  transparentOnTop?: boolean;
 }
 
 type Viewport = 'desktop' | 'mobile';
 
 export function Header({
-  header,
   isLoggedIn,
   cart,
-  publicStoreDomain,
+  transparentOnTop = true,
 }: HeaderProps) {
-  const {shop, menu} = header;
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  const useTransparent = transparentOnTop && isHome;
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 48);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive: true});
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const solid = scrolled || !useTransparent;
+  const lightText = useTransparent && !scrolled;
+
   return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-    </header>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          solid
+            ? 'border-b border-neutral-muted/80 bg-brand-inverse/95 shadow-soft backdrop-blur-md'
+            : 'border-b border-transparent bg-transparent'
+        }`}
+      >
+        <div className="container-premium flex h-16 items-center gap-6 lg:h-[4.25rem]">
+          <Logo inverted={lightText} className="shrink-0" />
+
+          <HeaderMenu viewport="desktop" lightText={lightText} />
+
+          <HeaderCtas
+            isLoggedIn={isLoggedIn}
+            cart={cart}
+            lightText={lightText}
+          />
+        </div>
+      </header>
+    </>
   );
 }
 
 export function HeaderMenu({
-  menu,
-  primaryDomainUrl,
   viewport,
-  publicStoreDomain,
+  lightText = false,
 }: {
-  menu: HeaderProps['header']['menu'];
-  primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
   viewport: Viewport;
-  publicStoreDomain: HeaderProps['publicStoreDomain'];
+  lightText?: boolean;
 }) {
-  const className = `header-menu-${viewport}`;
   const {close} = useAside();
+  const isMobile = viewport === 'mobile';
+
+  const linkClass = ({isActive}: {isActive: boolean}) =>
+    [
+      'link-underline font-sans text-[0.7rem] font-medium uppercase tracking-[0.16em] transition-colors duration-300',
+      lightText && !isMobile
+        ? 'text-brand-inverse/90 hover:text-accent-soft'
+        : 'text-brand hover:text-accent',
+      isActive ? 'text-accent' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
 
   return (
-    <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
+    <nav
+      className={
+        isMobile
+          ? 'flex flex-col gap-1'
+          : 'mx-auto hidden items-center gap-8 lg:flex'
+      }
+      aria-label={isMobile ? 'Mobile menu' : 'Primary'}
+    >
+      {NAV_LINKS.map((link) => (
         <NavLink
-          end
-          onClick={close}
+          key={link.to}
+          to={link.to}
+          end={link.to === '/'}
           prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
+          onClick={isMobile ? close : undefined}
+          className={linkClass}
         >
-          Home
+          {link.title}
         </NavLink>
-      )}
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            onClick={close}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
+      ))}
     </nav>
   );
 }
@@ -98,134 +116,165 @@ export function HeaderMenu({
 function HeaderCtas({
   isLoggedIn,
   cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+  lightText,
+}: Pick<HeaderProps, 'isLoggedIn' | 'cart'> & {lightText: boolean}) {
+  const iconClass = lightText
+    ? 'text-brand-inverse/90 hover:text-accent-soft'
+    : 'text-brand hover:text-accent';
+
   return (
-    <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
+    <nav className="ml-auto flex items-center gap-3 sm:gap-5" aria-label="Utility">
+      <SearchToggle className={iconClass} />
+      <AccountLink isLoggedIn={isLoggedIn} className={iconClass} />
+      <CartToggle cart={cart} className={iconClass} />
+      <HeaderMenuMobileToggle className={iconClass} />
     </nav>
   );
 }
 
-function HeaderMenuMobileToggle() {
+function HeaderMenuMobileToggle({className}: {className: string}) {
   const {open} = useAside();
   return (
     <button
-      className="header-menu-mobile-toggle reset"
+      type="button"
+      className={`flex h-10 w-10 items-center justify-center lg:hidden ${className}`}
       onClick={() => open('mobile')}
+      aria-label="Open menu"
     >
-      <h3>☰</h3>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        className="h-6 w-6"
+        aria-hidden="true"
+      >
+        <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
     </button>
   );
 }
 
-function SearchToggle() {
+function SearchToggle({className}: {className: string}) {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button
+      type="button"
+      className={`hidden items-center gap-2 sm:flex ${className}`}
+      onClick={() => open('search')}
+      aria-label="Open search"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        className="h-5 w-5"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path strokeLinecap="round" d="M20 20l-3-3" />
+      </svg>
+      <span className="sr-only sm:not-sr-only sm:text-[0.65rem] sm:font-medium sm:uppercase sm:tracking-[0.16em]">
+        Search
+      </span>
     </button>
   );
 }
 
-function CartBadge({count}: {count: number}) {
+function AccountLink({
+  isLoggedIn,
+  className,
+}: Pick<HeaderProps, 'isLoggedIn'> & {className: string}) {
+  return (
+    <NavLink
+      prefetch="intent"
+      to="/account"
+      className={`hidden items-center gap-2 sm:flex ${className}`}
+      aria-label="Account"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        className="h-5 w-5"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="8" r="4" />
+        <path strokeLinecap="round" d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" />
+      </svg>
+      <Suspense fallback={<span className="text-[0.65rem] font-medium uppercase tracking-[0.16em]">Account</span>}>
+        <Await resolve={isLoggedIn} errorElement={<span>Sign in</span>}>
+          {(loggedIn) => (
+            <span className="text-[0.65rem] font-medium uppercase tracking-[0.16em]">
+              {loggedIn ? 'Account' : 'Sign in'}
+            </span>
+          )}
+        </Await>
+      </Suspense>
+    </NavLink>
+  );
+}
+
+function CartBadge({count, className}: {count: number; className: string}) {
   const {open} = useAside();
   const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
-    <a
-      href="/cart"
-      onClick={(e) => {
-        e.preventDefault();
+    <button
+      type="button"
+      className={`relative flex h-10 w-10 items-center justify-center ${className}`}
+      onClick={() => {
         open('cart');
-        publish('cart_viewed', {
+        void publish('cart_viewed', {
           cart,
           prevCart,
           shop,
           url: window.location.href || '',
         } as CartViewPayload);
       }}
+      aria-label={`Open cart, ${count} items`}
     >
-      Cart <span aria-label={`(items: ${count})`}>{count}</span>
-    </a>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        className="h-5 w-5"
+        aria-hidden="true"
+      >
+        <path strokeLinecap="round" d="M6 6h15l-1.5 9h-12z" />
+        <path strokeLinecap="round" d="M6 6l-1-2H3M9 20a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
+      </svg>
+      {count > 0 && (
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[0.65rem] font-semibold text-brand">
+          {count}
+        </span>
+      )}
+    </button>
   );
 }
 
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
+function CartToggle({
+  cart,
+  className,
+}: Pick<HeaderProps, 'cart'> & {className: string}) {
   return (
-    <Suspense fallback={<CartBadge count={0} />}>
+    <Suspense fallback={<CartBadge count={0} className={className} />}>
       <Await resolve={cart}>
-        <CartBanner />
+        <CartBanner className={className} />
       </Await>
     </Suspense>
   );
 }
 
-function CartBanner() {
+function CartBanner({className}: {className: string}) {
   const originalCart = useAsyncValue() as CartApiQueryFragment | null;
   const cart = useOptimisticCart(originalCart);
-  return <CartBadge count={cart?.totalQuantity ?? 0} />;
-}
-
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'About',
-      type: 'PAGE',
-      url: '/pages/about',
-      items: [],
-    },
-  ],
-};
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
-  };
+  return <CartBadge count={cart?.totalQuantity ?? 0} className={className} />;
 }

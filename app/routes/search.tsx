@@ -12,9 +12,16 @@ import type {
   RegularSearchQuery,
   PredictiveSearchQuery,
 } from 'storefrontapi.generated';
+import {buildSeo} from '~/lib/seo';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Search`}];
+  return buildSeo({
+    title: 'Search',
+    description:
+      'Search frozen savouries, packs, and favourites from The Savoury Lab.',
+    path: '/search',
+    noIndex: true,
+  });
 };
 
 export async function loader({request, context}: Route.LoaderArgs) {
