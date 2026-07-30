@@ -8,11 +8,14 @@ GitHub: [YJac16/The-Savoury-Lab](https://github.com/YJac16/The-Savoury-Lab)
 
 | URL | Status |
 |-----|--------|
-| https://tsl-store.vercel.app | Working production alias — **use this** |
-| https://the-savoury-lab-yaseens-projects-1765104f.vercel.app | Working |
-| https://the-savoury-lab.vercel.app | Project default alias — currently returns 500 on Vercel edge; avoid until fixed |
+| https://the-savoury-lab.vercel.app | Production (project domain) |
+| https://tsl-store.vercel.app | Production alias |
+| https://the-savoury-lab-yaseens-projects-1765104f.vercel.app | Team deployment URL |
 
 Catalogue data currently comes from Shopify’s public **[mock.shop](https://mock.shop)** demo. A banner on the site explains this. Do not take real payments until you link your own store.
+
+> Vercel runs Node, not Oxygen. SSR must use `renderToPipeableStream` from `react-dom/server` (see `app/entry.server.tsx`). Do not use `renderToReadableStream` — Node’s `react-dom/server` does not export it as an ESM named export and the function will crash the serverless process.
+
 
 ## Current mode: no Shopify account yet
 
