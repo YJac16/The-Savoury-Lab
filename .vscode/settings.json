@@ -4,5 +4,6 @@
     "*.css": "tailwindcss"
   },
   "css.lint.unknownAtRules": "ignore",
-  "tailwindCSS.lint.suggestCanonicalClasses": "warning"
+  "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
+  "tailwindCSS.lint.cssConflict": "ignore"
 }

@@ -54,12 +54,12 @@ export function FeaturedCategories({
                     prefetch="intent"
                     className="group block overflow-hidden bg-neutral focus-visible:outline-offset-4"
                   >
-                    <div className="relative aspect-4/5 overflow-hidden bg-neutral-muted">
+                    <div className="relative aspect-card overflow-hidden bg-neutral-muted">
                       {image ? (
                         <Image
                           data={image}
                           alt={image.altText || category.title}
-                          className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
+                          className="size-full object-cover transition-media group-hover:scale-105"
                           sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
                           loading={index < 4 ? 'eager' : 'lazy'}
                         />
@@ -71,7 +71,7 @@ export function FeaturedCategories({
                           </span>
                         </div>
                       )}
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand/70 via-brand/10 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90" />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand/70 via-brand/10 to-transparent transition-opacity duration-500 group-hover:from-brand/80" />
                       <div className="absolute inset-x-0 bottom-0 p-6">
                         <h3 className="font-display text-xl text-brand-inverse sm:text-2xl">
                           {category.title}

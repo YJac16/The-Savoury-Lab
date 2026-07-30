@@ -52,7 +52,7 @@ export function InstagramFeed({
             href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="link-underline self-start text-xs font-medium uppercase tracking-[0.18em] text-brand"
+            className="link-underline eyebrow self-start text-brand"
           >
             @{instagramUrl.split('/').filter(Boolean).pop()}
           </a>
@@ -73,16 +73,16 @@ export function InstagramFeed({
                     <Image
                       data={tile.image}
                       alt={tile.image.altText || tile.label}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
+                      className="absolute inset-0 object-cover transition-media group-hover:scale-105"
                       sizes="(min-width: 1024px) 33vw, 50vw"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="surface-instagram-fallback absolute inset-0 transition-transform duration-700 ease-premium group-hover:scale-105" />
+                    <div className="surface-instagram-fallback absolute inset-0 transition-media group-hover:scale-105" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-brand/80 via-brand/20 to-transparent" />
                   <div className="relative flex h-full flex-col justify-end p-4 sm:p-5">
-                    <span className="eyebrow mb-1 text-[0.6rem] text-accent-soft">
+                    <span className="eyebrow mb-1 text-accent-soft">
                       {BRAND.name}
                     </span>
                     <span className="font-display text-lg text-brand-inverse sm:text-xl">

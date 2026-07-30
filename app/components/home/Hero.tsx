@@ -62,7 +62,7 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
             fetchPriority="high"
           />
         ) : (
-          <div className="surface-hero-fallback h-full w-full" />
+          <div className="surface-hero-fallback size-full" />
         )}
         <div className="surface-hero-scrim absolute inset-0" />
         <motion.div

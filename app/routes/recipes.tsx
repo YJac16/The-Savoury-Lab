@@ -121,7 +121,7 @@ export default function RecipesPage() {
                           <Image
                             data={article.image}
                             alt={article.image.altText || article.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
                             sizes="(min-width: 1024px) 400px, 100vw"
                             loading={index < 3 ? 'eager' : 'lazy'}
                           />

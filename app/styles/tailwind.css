@@ -21,7 +21,22 @@
   --color-error: #dc2626;
 
   --shadow-soft: 0 16px 48px rgba(17, 17, 17, 0.08);
-  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility aspect-card {
+  aspect-ratio: 4 / 5;
+}
+
+@utility transition-media {
+  transition-property: transform;
+  transition-duration: 700ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility transition-header {
+  transition-property: all;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {

@@ -40,7 +40,7 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
         <Image
           data={active}
           alt={active.altText || title}
-          className="aspect-square w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
+          className="aspect-square w-full object-cover transition-media group-hover:scale-105"
           sizes="(min-width: 1024px) 50vw, 100vw"
           loading="eager"
         />

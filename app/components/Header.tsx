@@ -45,7 +45,7 @@ export function Header({
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ease-premium ${
+        className={`transition-header fixed inset-x-0 top-0 z-40 ${
           solid
             ? 'border-b border-neutral-muted/80 bg-brand-inverse/95 shadow-soft backdrop-blur-md'
             : 'border-b border-transparent bg-transparent'

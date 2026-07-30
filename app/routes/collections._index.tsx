@@ -88,14 +88,14 @@ function CollectionItem({
         to={`/collections/${collection.handle}`}
         prefetch="intent"
       >
-        <div className="relative aspect-4/5 overflow-hidden bg-neutral-muted">
+        <div className="relative aspect-card overflow-hidden bg-neutral-muted">
           {collection?.image ? (
             <Image
               alt={collection.image.altText || collection.title}
               data={collection.image}
               loading={index < 3 ? 'eager' : 'lazy'}
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
+              className="size-full object-cover transition-media group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full items-end p-6">
@@ -104,7 +104,7 @@ function CollectionItem({
               </span>
             </div>
           )}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand/70 via-brand/10 to-transparent opacity-80" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand/70 via-brand/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-6">
             <h2 className="font-display text-xl text-brand-inverse sm:text-2xl">
               {collection.title}
