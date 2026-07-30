@@ -55,7 +55,7 @@ export async function action({request, context}: Route.ActionArgs) {
     source: 'contact',
   };
 
-  console.log('Contact form submission', payload);
+  console.warn('Contact form submission', payload);
 
   const webhookUrl = context.env.CONTACT_WEBHOOK_URL;
   if (webhookUrl) {

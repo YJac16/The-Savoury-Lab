@@ -62,7 +62,7 @@ export function ProductCard({
               aspectRatio="1/1"
               data={image}
               loading={loading}
-              className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+              className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
               sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
             />
           ) : (

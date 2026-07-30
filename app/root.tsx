@@ -12,6 +12,7 @@ import {
 } from 'react-router';
 import type {ComponentProps, ReactNode} from 'react';
 import type {Route} from './+types/root';
+import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
@@ -90,6 +91,17 @@ export async function loader(args: Route.LoaderArgs) {
 
   const {storefront, env} = args.context;
 
+  let shop;
+  try {
+    shop = getShopAnalytics({
+      storefront,
+      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+    });
+  } catch (error) {
+    console.error('getShopAnalytics failed', error);
+    shop = null;
+  }
+
   return {
     ...deferredData,
     ...criticalData,
@@ -98,15 +110,11 @@ export async function loader(args: Route.LoaderArgs) {
       ga: env.PUBLIC_GA_MEASUREMENT_ID || undefined,
       metaPixel: env.PUBLIC_META_PIXEL_ID || undefined,
     },
-    shop: getShopAnalytics({
-      storefront,
-      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-    }),
+    shop,
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       withPrivacyBanner: false,
-      // localize the privacy banner
       country: args.context.storefront.i18n.country,
       language: args.context.storefront.i18n.language,
     },
@@ -165,9 +173,30 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       return [];
     });
 
+  // Customer Account API is unavailable on mock.shop and until Headless CAAPI is configured
+  const isLoggedIn = Promise.resolve(false)
+    .then(async () => {
+      try {
+        return await customerAccount.isLoggedIn();
+      } catch (error) {
+        console.error('customerAccount.isLoggedIn failed', error);
+        return false;
+      }
+    });
+
+  const cartPromise = Promise.resolve(null as CartApiQueryFragment | null)
+    .then(async () => {
+      try {
+        return await cart.get();
+      } catch (error) {
+        console.error('cart.get failed', error);
+        return null;
+      }
+    });
+
   return {
-    cart: cart.get(),
-    isLoggedIn: customerAccount.isLoggedIn(),
+    cart: cartPromise,
+    isLoggedIn,
     footer,
     recommendedProducts,
   };
@@ -203,15 +232,28 @@ export default function App() {
     return <Outlet />;
   }
 
+  const page = (
+    <PageLayout {...data}>
+      <Outlet />
+    </PageLayout>
+  );
+
+  if (!data.shop) {
+    return (
+      <>
+        {page}
+        <AnalyticsScripts />
+      </>
+    );
+  }
+
   return (
     <Analytics.Provider
       cart={data.cart as ComponentProps<typeof Analytics.Provider>['cart']}
       shop={data.shop}
       consent={data.consent}
     >
-      <PageLayout {...data}>
-        <Outlet />
-      </PageLayout>
+      {page}
       <AnalyticsScripts />
     </Analytics.Provider>
   );
@@ -230,7 +272,7 @@ export function ErrorBoundary() {
   }
 
   return (
-    <div className="flex min-h-[100svh] flex-col items-center justify-center bg-neutral px-6 py-16 text-center">
+    <div className="flex min-h-svh flex-col items-center justify-center bg-neutral px-6 py-16 text-center">
       <p className="eyebrow mb-4">Something went wrong</p>
       <h1 className="font-display text-6xl text-brand">{errorStatus}</h1>
       <p className="mt-4 max-w-md text-sm text-ink-muted">

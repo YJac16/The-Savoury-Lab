@@ -80,7 +80,7 @@ export default function MenuPage() {
             <div>
               <h2 className="mb-1 text-2xl sm:text-3xl">Extras</h2>
               <div className="mt-4 overflow-x-auto border border-neutral-muted">
-                <table className="w-full min-w-[20rem] text-left text-sm">
+                <table className="w-full min-w-80 text-left text-sm">
                   <thead>
                     <tr className="bg-brand text-brand-inverse">
                       <th className="px-4 py-3 font-medium">Item</th>
@@ -154,7 +154,7 @@ function MenuSectionTable({section}: {section: MenuSection}) {
         ) : null}
       </div>
       <div className="overflow-x-auto border border-neutral-muted">
-        <table className="w-full min-w-[20rem] text-left text-sm">
+        <table className="w-full min-w-80 text-left text-sm">
           <thead>
             <tr className="bg-brand text-brand-inverse">
               <th className="px-4 py-3 font-medium">Filling</th>

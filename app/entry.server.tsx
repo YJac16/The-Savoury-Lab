@@ -1,11 +1,13 @@
 import {ServerRouter} from 'react-router';
 import {isbot} from 'isbot';
-import {renderToReadableStream} from 'react-dom/server';
+import * as ReactDOMServer from 'react-dom/server';
 import {
   createContentSecurityPolicy,
   type HydrogenRouterContextProvider,
 } from '@shopify/hydrogen';
 import type {EntryContext} from 'react-router';
+
+const {renderToReadableStream} = ReactDOMServer;
 
 export default async function handleRequest(
   request: Request,

@@ -40,7 +40,7 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
         <Image
           data={active}
           alt={active.altText || title}
-          className="aspect-square w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+          className="aspect-square w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
           sizes="(min-width: 1024px) 50vw, 100vw"
           loading="eager"
         />
@@ -101,7 +101,7 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
               Close
             </button>
             <motion.div
-              className="max-h-[90vh] max-w-5xl overflow-hidden"
+              className="lightbox-frame max-w-5xl overflow-hidden"
               initial={prefersReducedMotion ? false : {scale: 0.96}}
               animate={{scale: 1}}
               exit={prefersReducedMotion ? undefined : {scale: 0.96}}
@@ -110,7 +110,7 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
               <Image
                 data={active}
                 alt={active.altText || title}
-                className="max-h-[90vh] w-auto object-contain"
+                className="lightbox-image"
                 sizes="90vw"
               />
             </motion.div>

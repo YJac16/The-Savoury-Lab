@@ -45,13 +45,13 @@ export function Header({
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ease-premium ${
           solid
             ? 'border-b border-neutral-muted/80 bg-brand-inverse/95 shadow-soft backdrop-blur-md'
             : 'border-b border-transparent bg-transparent'
         }`}
       >
-        <div className="container-premium flex h-16 items-center gap-6 lg:h-[4.25rem]">
+        <div className="container-premium flex h-16 items-center gap-6 lg:h-17">
           <Logo inverted={lightText} className="shrink-0" />
 
           <HeaderMenu viewport="desktop" lightText={lightText} />

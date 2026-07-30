@@ -88,14 +88,14 @@ function CollectionItem({
         to={`/collections/${collection.handle}`}
         prefetch="intent"
       >
-        <div className="relative aspect-[4/5] overflow-hidden bg-neutral-muted">
+        <div className="relative aspect-4/5 overflow-hidden bg-neutral-muted">
           {collection?.image ? (
             <Image
               alt={collection.image.altText || collection.title}
               data={collection.image}
               loading={index < 3 ? 'eager' : 'lazy'}
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+              className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full items-end p-6">

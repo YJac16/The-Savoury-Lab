@@ -110,18 +110,18 @@ export default function RecipesPage() {
             return (
               <li key={article.id}>
                 <FadeIn delay={index * 0.06}>
-                  <article className="group flex h-full flex-col overflow-hidden border border-neutral-muted bg-brand-inverse shadow-soft transition-shadow hover:shadow-[0_24px_64px_rgba(17,17,17,0.1)]">
+                  <article className="group flex h-full flex-col overflow-hidden border border-neutral-muted bg-brand-inverse shadow-soft transition-shadow hover:shadow-soft">
                     <Link
                       to={`/blogs/${blogHandle}/${article.handle}`}
                       prefetch="intent"
                       className="block"
                     >
                       {article.image && (
-                        <div className="aspect-[3/2] overflow-hidden bg-neutral-muted">
+                        <div className="aspect-3/2 overflow-hidden bg-neutral-muted">
                           <Image
                             data={article.image}
                             alt={article.image.altText || article.title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                             sizes="(min-width: 1024px) 400px, 100vw"
                             loading={index < 3 ? 'eager' : 'lazy'}
                           />

@@ -65,7 +65,7 @@ export function ProductForm({
                 } = value;
 
                 const pillClass = [
-                  'inline-flex min-h-11 min-w-[3.5rem] items-center justify-center border px-4 py-2 text-sm font-medium transition-all duration-300',
+                  'inline-flex min-h-11 min-w-14 items-center justify-center border px-4 py-2 text-sm font-medium transition-all duration-300',
                   selected
                     ? 'border-accent bg-accent/10 text-brand ring-1 ring-accent'
                     : 'border-neutral-muted text-brand hover:border-accent',

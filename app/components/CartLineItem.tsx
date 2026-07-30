@@ -44,7 +44,7 @@ export function CartLineItem({
               height={88}
               loading="lazy"
               width={88}
-              className="h-[88px] w-[88px] object-cover"
+              className="size-22 object-cover"
             />
           </Link>
         )}

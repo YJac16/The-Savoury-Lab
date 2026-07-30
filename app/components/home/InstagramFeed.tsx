@@ -73,12 +73,12 @@ export function InstagramFeed({
                     <Image
                       data={tile.image}
                       alt={tile.image.altText || tile.label}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
                       sizes="(min-width: 1024px) 33vw, 50vw"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(199,154,82,0.25),transparent_55%),linear-gradient(145deg,#1a1a1a,#111111)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]" />
+                    <div className="surface-instagram-fallback absolute inset-0 transition-transform duration-700 ease-premium group-hover:scale-105" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-brand/80 via-brand/20 to-transparent" />
                   <div className="relative flex h-full flex-col justify-end p-4 sm:p-5">

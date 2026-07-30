@@ -32,7 +32,7 @@ function FaqItemPanel({
         <button
           id={buttonId}
           type="button"
-          className="flex w-full items-center justify-between gap-6 py-6 text-left font-sans text-base font-medium text-brand transition-colors hover:text-accent focus-visible:outline-offset-[-2px]"
+          className="flex w-full items-center justify-between gap-6 py-6 text-left font-sans text-base font-medium text-brand transition-colors hover:text-accent focus-visible:-outline-offset-2"
           aria-expanded={isOpen}
           aria-controls={panelId}
           onClick={onToggle}

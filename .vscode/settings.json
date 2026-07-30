@@ -1,0 +1,8 @@
+{
+  "tailwindCSS.experimental.configFile": "app/styles/tailwind.css",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "css.lint.unknownAtRules": "ignore",
+  "tailwindCSS.lint.suggestCanonicalClasses": "warning"
+}

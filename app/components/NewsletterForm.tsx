@@ -74,10 +74,7 @@ export function NewsletterForm({className = ''}: {className?: string}) {
           className="relative flex flex-col gap-4 sm:flex-row sm:items-stretch"
           noValidate
         >
-          <div
-            aria-hidden="true"
-            className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
-          >
+          <div aria-hidden="true" className="honeypot">
             <label htmlFor="newsletter-company">Company</label>
             <input
               id="newsletter-company"

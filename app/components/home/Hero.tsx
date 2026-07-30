@@ -31,7 +31,7 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-[100svh] items-end overflow-hidden bg-brand"
+      className="relative flex min-h-svh items-end overflow-hidden bg-brand"
       aria-label="Hero"
     >
       <motion.div
@@ -41,7 +41,7 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
       >
         {videoUrl && !prefersReducedMotion ? (
           <video
-            className="h-[120%] w-full object-cover"
+            className="media-parallax"
             autoPlay
             muted
             loop
@@ -57,14 +57,14 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
           <img
             src={posterUrl}
             alt=""
-            className="h-[120%] w-full object-cover"
+            className="media-parallax"
             loading="eager"
             fetchPriority="high"
           />
         ) : (
-          <div className="h-full w-full bg-[radial-gradient(ellipse_at_20%_0%,#2a2218_0%,#111111_45%,#0a0a0a_100%)]" />
+          <div className="surface-hero-fallback h-full w-full" />
         )}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,17,17,0.2)_0%,rgba(17,17,17,0.55)_42%,rgba(17,17,17,0.94)_88%)]" />
+        <div className="surface-hero-scrim absolute inset-0" />
         <motion.div
           className="absolute inset-0 mix-blend-soft-light"
           style={{

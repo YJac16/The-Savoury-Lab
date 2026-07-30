@@ -132,7 +132,7 @@ export default function ContactPage() {
               <iframe
                 title={`${BRAND.name} location map`}
                 src={MAP_EMBED}
-                className="aspect-[4/3] w-full border-0"
+                className="aspect-4/3 w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
@@ -160,7 +160,7 @@ export default function ContactPage() {
                 )}
                 <div
                   aria-hidden="true"
-                  className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
+                  className="honeypot"
                 >
                   <label htmlFor="company">Company</label>
                   <input

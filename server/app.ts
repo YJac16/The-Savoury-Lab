@@ -2,14 +2,20 @@ import {
   createRequestHandler,
   storefrontRedirect,
 } from '@shopify/hydrogen';
-import {waitUntil} from '@vercel/functions';
+import {waitUntil as vercelWaitUntil} from '@vercel/functions';
 import * as reactRouterBuild from 'virtual:react-router/server-build';
 import {createHydrogenRouterContext} from '~/lib/context';
 
+function waitUntil(promise: Promise<unknown>) {
+  try {
+    vercelWaitUntil(promise);
+  } catch {
+    // Outside a Vercel request context, background work is optional.
+  }
+}
+
 /**
  * Vercel server entry — Web Fetch handler with Hydrogen load context.
- * @see https://vercel.com/docs/frameworks/frontend/react-router
- * @see https://shopify.dev/docs/storefronts/headless/hydrogen/deployments/self-hosting
  */
 export default async function handler(request: Request): Promise<Response> {
   try {
@@ -44,7 +50,9 @@ export default async function handler(request: Request): Promise<Response> {
 
     return response;
   } catch (error) {
-    console.error(error);
-    return new Response('An unexpected error occurred', {status: 500});
+    console.error('Hydrogen request failed', error);
+    const message =
+      error instanceof Error ? error.message : 'An unexpected error occurred';
+    return new Response(`Server error: ${message}`, {status: 500});
   }
 }

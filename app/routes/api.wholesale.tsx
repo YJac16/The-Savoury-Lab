@@ -64,7 +64,7 @@ export async function action({request, context}: Route.ActionArgs) {
     source: 'wholesale',
   };
 
-  console.log('Wholesale enquiry', payload);
+  console.warn('Wholesale enquiry', payload);
 
   const webhookUrl = context.env.WHOLESALE_WEBHOOK_URL;
   if (webhookUrl) {

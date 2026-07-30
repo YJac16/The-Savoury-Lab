@@ -45,7 +45,7 @@ export function PageLayout({
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <div className="flex min-h-[100svh] flex-col">
+      <div className="flex min-h-svh flex-col">
         <MockShopBanner storeDomain={publicStoreDomain} />
         <CartAside cart={cart} recommendedProducts={recommendedProducts} />
         <SearchAside />
@@ -61,7 +61,7 @@ export function PageLayout({
         <main
           id="main-content"
           tabIndex={-1}
-          className={`flex-1 outline-none ${isHome ? '' : 'pt-16 lg:pt-[4.25rem]'}`}
+          className={`flex-1 outline-none ${isHome ? '' : 'pt-16 lg:pt-17'}`}
         >
           {children}
         </main>

@@ -54,12 +54,12 @@ export function FeaturedCategories({
                     prefetch="intent"
                     className="group block overflow-hidden bg-neutral focus-visible:outline-offset-4"
                   >
-                    <div className="relative aspect-[4/5] overflow-hidden bg-neutral-muted">
+                    <div className="relative aspect-4/5 overflow-hidden bg-neutral-muted">
                       {image ? (
                         <Image
                           data={image}
                           alt={image.altText || category.title}
-                          className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                          className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
                           sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
                           loading={index < 4 ? 'eager' : 'lazy'}
                         />
