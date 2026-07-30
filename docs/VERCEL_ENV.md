@@ -14,7 +14,9 @@ GitHub: [YJac16/The-Savoury-Lab](https://github.com/YJac16/The-Savoury-Lab)
 
 Catalogue data currently comes from Shopify’s public **[mock.shop](https://mock.shop)** demo. A banner on the site explains this. Do not take real payments until you link your own store.
 
-> Vercel runs Node, not Oxygen. SSR must use `renderToPipeableStream` from `react-dom/server` (see `app/entry.server.tsx`). Do not use `renderToReadableStream` — Node’s `react-dom/server` does not export it as an ESM named export and the function will crash the serverless process.
+> Vercel runs Node, not Oxygen. SSR must use `renderToPipeableStream` from `react-dom/server` (see `app/entry.server.tsx`). Do not use `renderToReadableStream` — Node’s `react-dom/server` does not export it for the serverless runtime.
+
+> Git production branch in the Vercel project should be `launch/storefront` (not `main`) so pushes to this branch auto-promote. If a push only creates a Preview, run `npx vercel --prod` or promote the deployment in the dashboard.
 
 
 ## Current mode: no Shopify account yet
