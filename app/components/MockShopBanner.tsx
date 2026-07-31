@@ -2,10 +2,11 @@ import {Link} from 'react-router';
 import {BRAND} from '~/lib/brand';
 
 /**
- * Shown when the storefront is in static-catalogue / mock.shop mode
- * (no merchant Shopify catalogue linked yet).
+ * Dev-only notice while the storefront uses mock.shop / static catalogue.
+ * Never shown in production builds (including when Shopify is connected).
  */
 export function MockShopBanner({storeDomain}: {storeDomain?: string}) {
+  if (import.meta.env.PROD) return null;
   if (!storeDomain || !storeDomain.includes('mock.shop')) return null;
 
   return (
