@@ -13,6 +13,11 @@ import {FaqAccordion} from '~/components/FaqAccordion';
 import {JsonLd} from '~/components/JsonLd';
 import {buildSeo, faqJsonLd, organizationJsonLd} from '~/lib/seo';
 import {FAQ_ITEMS} from '~/lib/brand';
+import {
+  getBestSellers,
+  getFeaturedCollections,
+  isStaticCatalogue,
+} from '~/lib/static-catalogue';
 
 export const meta: Route.MetaFunction = () => {
   return buildSeo({
@@ -24,6 +29,17 @@ export const meta: Route.MetaFunction = () => {
 
 export async function loader({context}: Route.LoaderArgs) {
   const {storefront, env} = context;
+
+  if (isStaticCatalogue(env)) {
+    const collections = getFeaturedCollections();
+    const products = getBestSellers(8);
+    return {
+      collections,
+      products,
+      heroImage: collections[0]?.image?.url,
+      heroVideoUrl: env.PUBLIC_HERO_VIDEO_URL || undefined,
+    };
+  }
 
   const [{collections}, {products}] = await Promise.all([
     storefront.query(HOMEPAGE_COLLECTIONS_QUERY),

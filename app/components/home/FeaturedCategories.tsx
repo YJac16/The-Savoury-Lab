@@ -28,6 +28,10 @@ function findCollectionImage(
   return collections?.find((collection) => collection.handle === handle)?.image;
 }
 
+function isLocalImageUrl(url: string): boolean {
+  return url.startsWith('/');
+}
+
 export function FeaturedCategories({
   collections,
   className = '',
@@ -56,13 +60,24 @@ export function FeaturedCategories({
                   >
                     <div className="relative aspect-card overflow-hidden bg-neutral-muted">
                       {image ? (
-                        <Image
-                          data={image}
-                          alt={image.altText || category.title}
-                          className="size-full object-cover transition-media group-hover:scale-105"
-                          sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
-                          loading={index < 4 ? 'eager' : 'lazy'}
-                        />
+                        isLocalImageUrl(image.url) ? (
+                          <img
+                            src={image.url}
+                            alt={image.altText || category.title}
+                            width={image.width ?? 1200}
+                            height={image.height ?? 1200}
+                            className="size-full object-cover transition-media group-hover:scale-105"
+                            loading={index < 4 ? 'eager' : 'lazy'}
+                          />
+                        ) : (
+                          <Image
+                            data={image}
+                            alt={image.altText || category.title}
+                            className="size-full object-cover transition-media group-hover:scale-105"
+                            sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
+                            loading={index < 4 ? 'eager' : 'lazy'}
+                          />
+                        )
                       ) : (
                         <div className="flex h-full flex-col justify-end p-6">
                           <span className="eyebrow mb-2">Collection</span>

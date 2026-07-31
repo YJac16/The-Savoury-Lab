@@ -6,6 +6,11 @@ import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {FadeIn} from '~/components/ui/FadeIn';
 import {buildSeo} from '~/lib/seo';
 import {BRAND} from '~/lib/brand';
+import {
+  asCollectionConnection,
+  getCollections,
+  isStaticCatalogue,
+} from '~/lib/static-catalogue';
 
 export const meta: Route.MetaFunction = () => {
   return buildSeo({
@@ -22,6 +27,10 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 async function loadCriticalData({context, request}: Route.LoaderArgs) {
+  if (isStaticCatalogue(context.env)) {
+    return {collections: asCollectionConnection(getCollections())};
+  }
+
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 12,
   });
@@ -58,7 +67,7 @@ export default function Collections() {
 
       <section className="container-premium section-pad">
         <PaginatedResourceSection<CollectionFragment>
-          connection={collections}
+          connection={collections as never}
           resourcesClassName="collections-grid"
         >
           {({node: collection, index}) => (
@@ -90,13 +99,24 @@ function CollectionItem({
       >
         <div className="relative aspect-card overflow-hidden bg-neutral-muted">
           {collection?.image ? (
-            <Image
-              alt={collection.image.altText || collection.title}
-              data={collection.image}
-              loading={index < 3 ? 'eager' : 'lazy'}
-              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="size-full object-cover transition-media group-hover:scale-105"
-            />
+            collection.image.url.startsWith('/') ? (
+              <img
+                src={collection.image.url}
+                alt={collection.image.altText || collection.title}
+                width={collection.image.width ?? 1200}
+                height={collection.image.height ?? 1200}
+                loading={index < 3 ? 'eager' : 'lazy'}
+                className="size-full object-cover transition-media group-hover:scale-105"
+              />
+            ) : (
+              <Image
+                alt={collection.image.altText || collection.title}
+                data={collection.image}
+                loading={index < 3 ? 'eager' : 'lazy'}
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="size-full object-cover transition-media group-hover:scale-105"
+              />
+            )
           ) : (
             <div className="flex h-full items-end p-6">
               <span className="font-display text-2xl text-brand">

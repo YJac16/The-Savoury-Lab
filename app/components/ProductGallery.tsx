@@ -29,6 +29,8 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
     );
   }
 
+  const isLocal = active.url.startsWith('/');
+
   return (
     <div className="space-y-4">
       <button
@@ -37,13 +39,24 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
         onClick={() => setZoomed(true)}
         aria-label={`View larger image of ${title}`}
       >
-        <Image
-          data={active}
-          alt={active.altText || title}
-          className="aspect-square w-full object-cover transition-media group-hover:scale-105"
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          loading="eager"
-        />
+        {isLocal ? (
+          <img
+            src={active.url}
+            alt={active.altText || title}
+            width={active.width ?? 1200}
+            height={active.height ?? 1200}
+            className="aspect-square w-full object-cover transition-media group-hover:scale-105"
+            loading="eager"
+          />
+        ) : (
+          <Image
+            data={active}
+            alt={active.altText || title}
+            className="aspect-square w-full object-cover transition-media group-hover:scale-105"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            loading="eager"
+          />
+        )}
         <span className="pointer-events-none absolute bottom-4 right-4 bg-brand-inverse/90 px-3 py-1.5 text-[0.65rem] uppercase tracking-[0.14em] text-brand opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           Zoom
         </span>
@@ -66,13 +79,24 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
                       : 'opacity-80 hover:opacity-100'
                   }`}
                 >
-                  <Image
-                    data={image}
-                    alt={image.altText || `${title} ${index + 1}`}
-                    className="aspect-square w-full object-cover"
-                    sizes="120px"
-                    loading="lazy"
-                  />
+                  {image.url.startsWith('/') ? (
+                    <img
+                      src={image.url}
+                      alt={image.altText || `${title} ${index + 1}`}
+                      width={image.width ?? 1200}
+                      height={image.height ?? 1200}
+                      className="aspect-square w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <Image
+                      data={image}
+                      alt={image.altText || `${title} ${index + 1}`}
+                      className="aspect-square w-full object-cover"
+                      sizes="120px"
+                      loading="lazy"
+                    />
+                  )}
                 </button>
               </li>
             );
@@ -107,12 +131,22 @@ export function ProductGallery({images, title}: ProductGalleryProps) {
               exit={prefersReducedMotion ? undefined : {scale: 0.96}}
               onClick={(event) => event.stopPropagation()}
             >
-              <Image
-                data={active}
-                alt={active.altText || title}
-                className="lightbox-image"
-                sizes="90vw"
-              />
+              {active.url.startsWith('/') ? (
+                <img
+                  src={active.url}
+                  alt={active.altText || title}
+                  width={active.width ?? 1200}
+                  height={active.height ?? 1200}
+                  className="lightbox-image"
+                />
+              ) : (
+                <Image
+                  data={active}
+                  alt={active.altText || title}
+                  className="lightbox-image"
+                  sizes="90vw"
+                />
+              )}
             </motion.div>
           </motion.div>
         )}

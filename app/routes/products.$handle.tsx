@@ -8,6 +8,7 @@ import {
   getProductOptions,
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
+  Money,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
@@ -24,20 +25,46 @@ import {
   FROZEN_FULFILMENT_NOTE,
 } from '~/lib/brand';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {
+  getAllProducts,
+  getProduct,
+  isStaticCatalogue,
+  type StaticProduct,
+} from '~/lib/static-catalogue';
+import {whatsappOrderUrl} from '~/lib/whatsapp';
+import {formatMenuPrice} from '~/lib/menu';
 
 export const meta: Route.MetaFunction = ({data}) => {
   if (!data?.product) return [{title: 'Product'}];
 
-  const variant = data.product.selectedOrFirstAvailableVariant;
+  if (data.staticMode) {
+    const product = data.product as StaticProduct;
+    return buildSeo({
+      title: product.title,
+      description: product.description,
+      path: `/products/${product.handle}`,
+      image: product.featuredImage?.url,
+      type: 'product',
+    });
+  }
+
+  const shopifyProduct = data.product as {
+    selectedOrFirstAvailableVariant?: {image?: {url?: string} | null} | null;
+    seo?: {description?: string | null; title?: string | null} | null;
+    description?: string | null;
+    title: string;
+    handle: string;
+  };
+  const variant = shopifyProduct.selectedOrFirstAvailableVariant;
   const description =
-    data.product.seo?.description ||
-    data.product.description ||
-    `${data.product.title} from The Savoury Lab`;
-  const path = `/products/${data.product.handle}`;
+    shopifyProduct.seo?.description ||
+    shopifyProduct.description ||
+    `${shopifyProduct.title} from The Savoury Lab`;
+  const path = `/products/${shopifyProduct.handle}`;
 
   return [
     ...buildSeo({
-      title: data.product.seo?.title || data.product.title,
+      title: shopifyProduct.seo?.title || shopifyProduct.title,
       description,
       path,
       image: variant?.image?.url,
@@ -58,10 +85,29 @@ export async function loader(args: Route.LoaderArgs) {
 
 async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
-  const {storefront} = context;
+  const {storefront, env} = context;
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
+  }
+
+  if (isStaticCatalogue(env)) {
+    const product = getProduct(handle);
+    if (!product) {
+      throw new Response(null, {status: 404});
+    }
+    const relatedProducts = getAllProducts()
+      .filter(
+        (item) =>
+          item.collectionHandle === product.collectionHandle &&
+          item.handle !== product.handle,
+      )
+      .slice(0, 4);
+    return {
+      staticMode: true as const,
+      product,
+      relatedProducts,
+    };
   }
 
   const [{product}] = await Promise.all([
@@ -87,13 +133,197 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     )
     .catch(() => [] as ProductCardProduct[]);
 
-  return {product, relatedProducts};
+  return {staticMode: false as const, product, relatedProducts};
 }
 
 type TabId = 'description' | 'ingredients' | 'heating' | 'reviews';
 
 export default function Product() {
-  const {product, relatedProducts} = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
+  if (data.staticMode) {
+    return (
+      <StaticProductPage
+        product={data.product}
+        relatedProducts={data.relatedProducts}
+      />
+    );
+  }
+  return (
+    <ShopifyProductPage
+      product={data.product}
+      relatedProducts={data.relatedProducts}
+    />
+  );
+}
+
+function StaticProductPage({
+  product,
+  relatedProducts,
+}: {
+  product: StaticProduct;
+  relatedProducts: ProductCardProduct[];
+}) {
+  const images = product.featuredImage ? [product.featuredImage] : [];
+  const orderUrl = whatsappOrderUrl(product);
+
+  const jsonLd = [
+    productJsonLd({
+      name: product.title,
+      description: product.description,
+      image: product.featuredImage?.url,
+      price: product.priceRange.minVariantPrice.amount,
+      currency: product.priceRange.minVariantPrice.currencyCode,
+      availability: true,
+      url: `/products/${product.handle}`,
+    }),
+    breadcrumbJsonLd([
+      {name: 'Home', path: '/'},
+      {name: 'Shop', path: '/collections/all'},
+      {name: product.title, path: `/products/${product.handle}`},
+    ]),
+  ];
+
+  return (
+    <>
+      <JsonLd data={jsonLd} />
+      <div className="bg-brand-inverse pb-24 lg:pb-0">
+        <div className="container-premium section-pad">
+          <nav aria-label="Breadcrumb" className="mb-8">
+            <ol className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+              <li>
+                <Link to="/" className="hover:text-accent" prefetch="intent">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link
+                  to={`/collections/${product.collectionHandle}`}
+                  className="hover:text-accent"
+                  prefetch="intent"
+                >
+                  {product.collectionTitle}
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li className="text-brand" aria-current="page">
+                {product.title}
+              </li>
+            </ol>
+          </nav>
+
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20">
+            <ProductGallery images={images} title={product.title} />
+
+            <div className="lg:sticky lg:top-24 lg:self-start">
+              <p className="eyebrow mb-3">{product.collectionTitle}</p>
+              <h1 className="text-balance text-3xl sm:text-4xl">
+                {product.title}
+              </h1>
+              <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+                {product.description}
+              </p>
+              {product.minNote ? (
+                <p className="mt-3 text-xs text-ink-muted">{product.minNote}</p>
+              ) : null}
+
+              <div className="mt-8 space-y-3 border-t border-neutral-muted pt-8">
+                <p className="eyebrow mb-3">Pack prices</p>
+                <ul className="space-y-2 text-sm">
+                  {product.packPrices.map((pack) => (
+                    <li
+                      key={`${pack.qty}-${pack.price}`}
+                      className="flex justify-between gap-4 border-b border-neutral-muted/60 pb-2"
+                    >
+                      <span>{pack.qty === 1 ? pack.label : `${pack.qty} pcs`}</span>
+                      <span className="font-medium text-brand">
+                        {formatMenuPrice(pack.price)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="pt-2 text-sm text-ink-muted">
+                  From{' '}
+                  <Money data={product.priceRange.minVariantPrice} />
+                </p>
+              </div>
+
+              <a
+                href={orderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary mt-8 inline-flex w-full justify-center sm:w-auto"
+              >
+                Order on WhatsApp
+              </a>
+
+              <dl className="mt-10 space-y-4 border-t border-neutral-muted pt-8 text-sm">
+                <dt className="eyebrow mb-1">Storage</dt>
+                <dd className="whitespace-pre-line text-ink-muted">
+                  {DEFAULT_STORAGE_GUIDE}
+                </dd>
+                <dt className="eyebrow mb-1">Heating</dt>
+                <dd className="whitespace-pre-line text-ink-muted">
+                  {DEFAULT_HEATING_GUIDE}
+                </dd>
+                <dt className="eyebrow mb-1">Delivery</dt>
+                <dd className="whitespace-pre-line text-ink-muted">
+                  {FROZEN_FULFILMENT_NOTE}
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          {relatedProducts.length > 0 && (
+            <section
+              className="mt-20 border-t border-neutral-muted pt-16"
+              aria-labelledby="related-heading"
+            >
+              <p className="eyebrow mb-3">You may also like</p>
+              <h2 id="related-heading" className="mb-10 text-3xl sm:text-4xl">
+                Related products
+              </h2>
+              <ul className="products-grid">
+                {relatedProducts.map((item) => (
+                  <li key={item.id}>
+                    <ProductCard product={item} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-neutral-muted bg-brand-inverse/95 p-4 backdrop-blur-md lg:hidden">
+        <div className="container-premium flex items-center gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-display text-base">{product.title}</p>
+            <p className="text-sm text-ink-muted">
+              From <Money data={product.priceRange.minVariantPrice} />
+            </p>
+          </div>
+          <a
+            href={orderUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary shrink-0 whitespace-nowrap px-5 py-3 text-[0.65rem]"
+          >
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ShopifyProductPage({
+  product,
+  relatedProducts,
+}: {
+  product: any;
+  relatedProducts: ProductCardProduct[];
+}) {
   const [activeTab, setActiveTab] = useState<TabId>('description');
   const {open} = useAside();
 

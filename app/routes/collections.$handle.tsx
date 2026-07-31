@@ -7,6 +7,7 @@ import {ProductCard} from '~/components/ProductCard';
 import {FadeIn} from '~/components/ui/FadeIn';
 import {buildSeo} from '~/lib/seo';
 import type {ProductItemFragment} from 'storefrontapi.generated';
+import {getCollection, isStaticCatalogue} from '~/lib/static-catalogue';
 
 export const meta: Route.MetaFunction = ({data}) => {
   if (!data?.collection) {
@@ -34,14 +35,23 @@ export async function loader(args: Route.LoaderArgs) {
 
 async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
-  const {storefront} = context;
-  const paginationVariables = getPaginationVariables(request, {
-    pageBy: 12,
-  });
+  const {storefront, env} = context;
 
   if (!handle) {
     throw redirect('/collections');
   }
+
+  if (isStaticCatalogue(env)) {
+    const collection = getCollection(handle);
+    if (!collection) {
+      throw new Response(`Collection ${handle} not found`, {status: 404});
+    }
+    return {collection, staticMode: true as const};
+  }
+
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 12,
+  });
 
   const [{collection}] = await Promise.all([
     storefront.query(COLLECTION_QUERY, {
@@ -57,7 +67,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   redirectIfHandleIsLocalized(request, {handle, data: collection});
 
-  return {collection};
+  return {collection, staticMode: false as const};
 }
 
 function loadDeferredData(_args: Route.LoaderArgs) {
@@ -65,7 +75,7 @@ function loadDeferredData(_args: Route.LoaderArgs) {
 }
 
 export default function Collection() {
-  const {collection} = useLoaderData<typeof loader>();
+  const {collection, staticMode} = useLoaderData<typeof loader>();
 
   return (
     <div className="bg-brand-inverse">
@@ -85,7 +95,7 @@ export default function Collection() {
 
       <section className="container-premium section-pad">
         <PaginatedResourceSection<ProductItemFragment>
-          connection={collection.products}
+          connection={collection.products as never}
           resourcesClassName="products-grid"
         >
           {({node: product, index}) => (
@@ -98,14 +108,16 @@ export default function Collection() {
         </PaginatedResourceSection>
       </section>
 
-      <Analytics.CollectionView
-        data={{
-          collection: {
-            id: collection.id,
-            handle: collection.handle,
-          },
-        }}
-      />
+      {!staticMode ? (
+        <Analytics.CollectionView
+          data={{
+            collection: {
+              id: collection.id,
+              handle: collection.handle,
+            },
+          }}
+        />
+      ) : null}
     </div>
   );
 }

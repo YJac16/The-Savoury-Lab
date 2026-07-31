@@ -20,6 +20,10 @@ import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {AnalyticsScripts} from './components/AnalyticsScripts';
+import {
+  getBestSellers,
+  isStaticCatalogue,
+} from '~/lib/static-catalogue';
 
 export type RootLoader = typeof loader;
 
@@ -147,7 +151,8 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  const {storefront, customerAccount, cart} = context;
+  const {storefront, customerAccount, cart, env} = context;
+  const staticMode = isStaticCatalogue(env);
 
   // defer the footer query (below the fold)
   const footer = storefront
@@ -163,15 +168,17 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       return null;
     });
 
-  const recommendedProducts = storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY, {
-      cache: storefront.CacheLong(),
-    })
-    .then((result) => result.products.nodes)
-    .catch((error: Error) => {
-      console.error(error);
-      return [];
-    });
+  const recommendedProducts = staticMode
+    ? Promise.resolve(getBestSellers(4))
+    : storefront
+        .query(RECOMMENDED_PRODUCTS_QUERY, {
+          cache: storefront.CacheLong(),
+        })
+        .then((result) => result.products.nodes)
+        .catch((error: Error) => {
+          console.error(error);
+          return [];
+        });
 
   // Customer Account API is unavailable on mock.shop and until Headless CAAPI is configured
   const isLoggedIn = Promise.resolve(false)

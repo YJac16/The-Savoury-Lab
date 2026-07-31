@@ -12,7 +12,7 @@ GitHub: [YJac16/The-Savoury-Lab](https://github.com/YJac16/The-Savoury-Lab)
 | https://tsl-store.vercel.app | Production alias |
 | https://the-savoury-lab-yaseens-projects-1765104f.vercel.app | Team deployment URL |
 
-Catalogue data currently comes from Shopify’s public **[mock.shop](https://mock.shop)** demo. A banner on the site explains this. Do not take real payments until you link your own store.
+Catalogue data uses a **static food menu** with local placeholder images while `PUBLIC_STORE_DOMAIN=mock.shop` (see [CATALOGUE_IMAGES.md](./CATALOGUE_IMAGES.md)). Clothing from mock.shop is not shown. Do not take real payments until you link your own Shopify store.
 
 > Vercel runs Node, not Oxygen. SSR must use `renderToPipeableStream` from `react-dom/server` (see `app/entry.server.tsx`). Do not use `renderToReadableStream` — Node’s `react-dom/server` does not export it for the serverless runtime.
 

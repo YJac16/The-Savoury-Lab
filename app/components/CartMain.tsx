@@ -145,16 +145,28 @@ function CartEmpty({
     <div className="flex flex-col items-center py-12 text-center">
       <p className="font-display text-xl text-brand">Your cart is empty</p>
       <p className="mt-3 max-w-xs text-sm text-ink-muted">
-        Discover handcrafted frozen savouries from {BRAND.name}.
+        Online checkout unlocks when our Shopify store is linked. Order via
+        WhatsApp or browse the menu meanwhile.
       </p>
-      <Link
-        to="/collections/all"
-        onClick={layout === 'aside' ? close : undefined}
-        prefetch="intent"
-        className="btn-primary mt-8"
-      >
-        Continue shopping
-      </Link>
+      <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
+        <a
+          href={`https://wa.me/${BRAND.contact.whatsapp}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-primary"
+          onClick={layout === 'aside' ? close : undefined}
+        >
+          Order on WhatsApp
+        </a>
+        <Link
+          to="/collections/all"
+          onClick={layout === 'aside' ? close : undefined}
+          prefetch="intent"
+          className="inline-flex min-h-11 items-center justify-center border border-brand px-5 py-2.5 font-sans text-[0.7rem] font-medium uppercase tracking-[0.18em] text-brand transition-colors hover:border-accent hover:text-accent"
+        >
+          Browse menu
+        </Link>
+      </div>
     </div>
   );
 }

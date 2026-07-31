@@ -13,6 +13,8 @@ import type {
   PredictiveSearchQuery,
 } from 'storefrontapi.generated';
 import {buildSeo} from '~/lib/seo';
+import {BRAND} from '~/lib/brand';
+import {isStaticCatalogue, searchStaticProducts} from '~/lib/static-catalogue';
 
 export const meta: Route.MetaFunction = () => {
   return buildSeo({
@@ -227,10 +229,50 @@ async function regularSearch({
   Route.LoaderArgs,
   'request' | 'context'
 >): Promise<RegularSearchReturn> {
-  const {storefront} = context;
+  const {storefront, env} = context;
   const url = new URL(request.url);
   const variables = getPaginationVariables(request, {pageBy: 8});
   const term = String(url.searchParams.get('q') || '');
+
+  if (isStaticCatalogue(env)) {
+    const products = searchStaticProducts(term).map((product) => ({
+      __typename: 'Product' as const,
+      id: product.id,
+      handle: product.handle,
+      title: product.title,
+      trackingParameters: null,
+      vendor: BRAND.name,
+      publishedAt: new Date().toISOString(),
+      selectedOrFirstAvailableVariant: product.featuredImage
+        ? {
+            image: product.featuredImage,
+            price: product.priceRange.minVariantPrice,
+          }
+        : null,
+    }));
+
+    return {
+      type: 'regular',
+      term,
+      error: undefined,
+      result: {
+        total: products.length,
+        items: {
+          products: {
+            nodes: products,
+            pageInfo: {
+              hasNextPage: false,
+              hasPreviousPage: false,
+              startCursor: null,
+              endCursor: null,
+            },
+          },
+          pages: {nodes: [], pageInfo: {hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null}},
+          articles: {nodes: [], pageInfo: {hasNextPage: false, hasPreviousPage: false, startCursor: null, endCursor: null}},
+        },
+      },
+    };
+  }
 
   // Search articles, pages, and products for the `q` term
   const {
@@ -392,13 +434,44 @@ async function predictiveSearch({
   Route.ActionArgs,
   'request' | 'context'
 >): Promise<PredictiveSearchReturn> {
-  const {storefront} = context;
+  const {storefront, env} = context;
   const url = new URL(request.url);
   const term = String(url.searchParams.get('q') || '').trim();
   const limit = Number(url.searchParams.get('limit') || 10);
   const type = 'predictive';
 
   if (!term) return {type, term, result: getEmptyPredictiveSearchResult()};
+
+  if (isStaticCatalogue(env)) {
+    const products = searchStaticProducts(term)
+      .slice(0, limit)
+      .map((product) => ({
+        __typename: 'Product' as const,
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        trackingParameters: null,
+        selectedOrFirstAvailableVariant: {
+          id: `static-variant-${product.handle}`,
+          image: product.featuredImage ?? null,
+          price: product.priceRange.minVariantPrice,
+        },
+      }));
+
+    const items = {
+      articles: [],
+      collections: [],
+      pages: [],
+      products,
+      queries: [],
+    };
+
+    return {
+      type,
+      term,
+      result: {items, total: products.length},
+    };
+  }
 
   // Predictively search articles, collections, pages, products, and queries (suggestions)
   const {

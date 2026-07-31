@@ -70,13 +70,24 @@ export function InstagramFeed({
                   aria-label={`View ${BRAND.name} on Instagram — ${tile.label}`}
                 >
                   {tile.image?.url ? (
-                    <Image
-                      data={tile.image}
-                      alt={tile.image.altText || tile.label}
-                      className="absolute inset-0 object-cover transition-media group-hover:scale-105"
-                      sizes="(min-width: 1024px) 33vw, 50vw"
-                      loading="lazy"
-                    />
+                    tile.image.url.startsWith('/') ? (
+                      <img
+                        src={tile.image.url}
+                        alt={tile.image.altText || tile.label}
+                        width={tile.image.width ?? 1200}
+                        height={tile.image.height ?? 1200}
+                        className="absolute inset-0 size-full object-cover transition-media group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Image
+                        data={tile.image}
+                        alt={tile.image.altText || tile.label}
+                        className="absolute inset-0 object-cover transition-media group-hover:scale-105"
+                        sizes="(min-width: 1024px) 33vw, 50vw"
+                        loading="lazy"
+                      />
+                    )
                   ) : (
                     <div className="surface-instagram-fallback absolute inset-0 transition-media group-hover:scale-105" />
                   )}

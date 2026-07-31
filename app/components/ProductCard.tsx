@@ -4,6 +4,7 @@ import type {CurrencyCode} from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {useVariantUrl} from '~/lib/variants';
+import {whatsappOrderUrl} from '~/lib/whatsapp';
 
 export type ProductCardProduct = {
   id: string;
@@ -30,6 +31,8 @@ export type ProductCardProduct = {
     id: string;
     availableForSale: boolean;
   } | null;
+  orderViaWhatsApp?: boolean;
+  packPrices?: {qty: number; price: number; label: string}[];
 };
 
 type ProductCardProps = {
@@ -37,6 +40,10 @@ type ProductCardProps = {
   loading?: 'eager' | 'lazy';
   className?: string;
 };
+
+function isLocalImageUrl(url: string): boolean {
+  return url.startsWith('/');
+}
 
 export function ProductCard({
   product,
@@ -47,6 +54,7 @@ export function ProductCard({
   const image = product.featuredImage;
   const variant = product.selectedOrFirstAvailableVariant;
   const {open} = useAside();
+  const viaWhatsApp = Boolean(product.orderViaWhatsApp);
 
   return (
     <article className={`group flex h-full flex-col ${className}`.trim()}>
@@ -57,14 +65,25 @@ export function ProductCard({
       >
         <div className="relative aspect-square overflow-hidden bg-neutral-muted">
           {image ? (
-            <Image
-              alt={image.altText || product.title}
-              aspectRatio="1/1"
-              data={image}
-              loading={loading}
-              className="size-full object-cover transition-media group-hover:scale-105"
-              sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
-            />
+            isLocalImageUrl(image.url) ? (
+              <img
+                src={image.url}
+                alt={image.altText || product.title}
+                width={image.width ?? 1200}
+                height={image.height ?? 1200}
+                loading={loading}
+                className="size-full object-cover transition-media group-hover:scale-105"
+              />
+            ) : (
+              <Image
+                alt={image.altText || product.title}
+                aspectRatio="1/1"
+                data={image}
+                loading={loading}
+                className="size-full object-cover transition-media group-hover:scale-105"
+                sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
+              />
+            )
           ) : (
             <div className="flex h-full items-center justify-center p-6 text-center">
               <span className="font-display text-lg text-brand/60">
@@ -85,10 +104,23 @@ export function ProductCard({
         </Link>
 
         <p className="text-sm text-ink-muted">
-          <Money data={product.priceRange.minVariantPrice} />
+          {viaWhatsApp ? (
+            <>From <Money data={product.priceRange.minVariantPrice} /></>
+          ) : (
+            <Money data={product.priceRange.minVariantPrice} />
+          )}
         </p>
 
-        {variant?.availableForSale ? (
+        {viaWhatsApp ? (
+          <a
+            href={whatsappOrderUrl(product)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 w-full items-center justify-center border border-brand px-5 py-2.5 font-sans text-[0.7rem] font-medium uppercase tracking-[0.18em] text-brand transition-all duration-300 hover:border-accent hover:bg-accent hover:text-brand"
+          >
+            Order on WhatsApp
+          </a>
+        ) : variant?.availableForSale ? (
           <AddToCartButton
             onClick={() => open('cart')}
             lines={[

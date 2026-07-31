@@ -7,6 +7,11 @@ import {FadeIn} from '~/components/ui/FadeIn';
 import {buildSeo} from '~/lib/seo';
 import {BRAND} from '~/lib/brand';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
+import {
+  asProductConnection,
+  getAllProducts,
+  isStaticCatalogue,
+} from '~/lib/static-catalogue';
 
 export const meta: Route.MetaFunction = () => {
   return buildSeo({
@@ -23,7 +28,12 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 async function loadCriticalData({context, request}: Route.LoaderArgs) {
-  const {storefront} = context;
+  const {storefront, env} = context;
+
+  if (isStaticCatalogue(env)) {
+    return {products: asProductConnection(getAllProducts())};
+  }
+
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 12,
   });
@@ -59,7 +69,7 @@ export default function Collection() {
 
       <section className="container-premium section-pad">
         <PaginatedResourceSection<CollectionItemFragment>
-          connection={products}
+          connection={products as never}
           resourcesClassName="products-grid"
         >
           {({node: product, index}) => (
