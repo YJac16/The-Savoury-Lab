@@ -11,7 +11,6 @@ import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
 import type {ProductCardProduct} from '~/components/ProductCard';
 import {WhatsAppFloat} from '~/components/WhatsAppFloat';
-import {MockShopBanner} from '~/components/MockShopBanner';
 import {
   SEARCH_ENDPOINT,
   SearchFormPredictive,
@@ -46,7 +45,6 @@ export function PageLayout({
         Skip to main content
       </a>
       <div className="flex min-h-svh flex-col">
-        <MockShopBanner storeDomain={publicStoreDomain} />
         <CartAside cart={cart} recommendedProducts={recommendedProducts} />
         <SearchAside />
         <MobileMenuAside />
