@@ -12,6 +12,10 @@ export function Logo({
   showHalaal = false,
   className = '',
 }: LogoProps) {
+  const src = inverted
+    ? '/logo-no-background-inverted.png'
+    : '/logo-no-background.png';
+
   return (
     <Link
       to="/"
@@ -22,13 +26,11 @@ export function Logo({
         <span className="eyebrow text-[0.65rem]">Halaal</span>
       )}
       <img
-        src="/logo.png"
+        src={src}
         alt={BRAND.name}
-        width={441}
-        height={279}
-        className={`h-10 w-auto object-contain object-left transition-opacity duration-300 sm:h-11 ${
-          inverted ? 'brightness-0 invert' : ''
-        }`}
+        width={600}
+        height={510}
+        className="h-10 w-auto object-contain object-left transition-opacity duration-300 sm:h-11"
         decoding="async"
       />
     </Link>
