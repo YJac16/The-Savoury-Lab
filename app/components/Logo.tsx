@@ -30,7 +30,7 @@ export function Logo({
         alt={BRAND.name}
         width={600}
         height={510}
-        className="h-10 w-auto object-contain object-left transition-opacity duration-300 sm:h-11"
+        className="h-12 w-auto object-contain object-left transition-opacity duration-300 sm:h-14"
         decoding="async"
       />
     </Link>
