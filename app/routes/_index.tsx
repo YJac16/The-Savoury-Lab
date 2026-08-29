@@ -28,7 +28,7 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {storefront, env} = context;
+  const {storefront, env} = context ?? {};
 
   if (isStaticCatalogue(env)) {
     const collections = getFeaturedCollections();
@@ -37,7 +37,7 @@ export async function loader({context}: Route.LoaderArgs) {
       collections,
       products,
       heroImage: HERO_IMAGE_SRC,
-      heroVideoUrl: env.PUBLIC_HERO_VIDEO_URL || undefined,
+      heroVideoUrl: env?.PUBLIC_HERO_VIDEO_URL || undefined,
     };
   }
 

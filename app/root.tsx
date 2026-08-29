@@ -98,8 +98,8 @@ export async function loader(args: Route.LoaderArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env} = args.context;
-  const analyticsEnabled = canUseShopifyCustomerAnalytics(env);
+  const {storefront, env} = args.context ?? {};
+  const analyticsEnabled = canUseShopifyCustomerAnalytics(env ?? {});
 
   let shop = null;
   if (analyticsEnabled) {
@@ -117,10 +117,10 @@ export async function loader(args: Route.LoaderArgs) {
   return {
     ...deferredData,
     ...criticalData,
-    publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
+    publicStoreDomain: env?.PUBLIC_STORE_DOMAIN ?? '',
     analyticsIds: {
-      ga: env.PUBLIC_GA_MEASUREMENT_ID || undefined,
-      metaPixel: env.PUBLIC_META_PIXEL_ID || undefined,
+      ga: env?.PUBLIC_GA_MEASUREMENT_ID || undefined,
+      metaPixel: env?.PUBLIC_META_PIXEL_ID || undefined,
     },
     shop,
     consent: analyticsEnabled
@@ -128,8 +128,8 @@ export async function loader(args: Route.LoaderArgs) {
           checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
           storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
           withPrivacyBanner: false,
-          country: args.context.storefront.i18n.country,
-          language: args.context.storefront.i18n.language,
+          country: storefront?.i18n.country ?? 'ZA',
+          language: storefront?.i18n.language ?? 'EN',
         }
       : null,
   };
@@ -140,7 +140,7 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const {storefront, env} = context;
+  const {storefront, env} = context ?? {};
 
   if (isStaticCatalogue(env)) {
     return {
@@ -176,7 +176,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  const {storefront, customerAccount, cart, env} = context;
+  const {storefront, customerAccount, cart, env} = context ?? {};
   const staticMode = isStaticCatalogue(env);
 
   // defer the footer query (below the fold)

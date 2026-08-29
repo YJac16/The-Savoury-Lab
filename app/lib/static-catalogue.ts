@@ -71,10 +71,14 @@ function slugify(value: string): string {
     .replace(/^-|-$/g, '');
 }
 
-export function isStaticCatalogue(env: {
+export function isStaticCatalogue(env?: {
   PUBLIC_STORE_DOMAIN?: string;
-}): boolean {
-  return (env.PUBLIC_STORE_DOMAIN ?? '').includes('mock.shop');
+} | null): boolean {
+  const domain =
+    env?.PUBLIC_STORE_DOMAIN ?? process.env.PUBLIC_STORE_DOMAIN ?? '';
+  // Missing Hydrogen env (local Vite without server/app.ts) uses the static menu.
+  if (!domain) return true;
+  return domain.includes('mock.shop');
 }
 
 export function catalogueImagePath(handle: string): string {

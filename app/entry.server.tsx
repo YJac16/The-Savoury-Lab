@@ -18,10 +18,17 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: HydrogenRouterContextProvider,
 ) {
+  const env = context?.env;
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
-      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
-      storeDomain: context.env.PUBLIC_STORE_DOMAIN,
+      checkoutDomain:
+        env?.PUBLIC_CHECKOUT_DOMAIN ||
+        process.env.PUBLIC_CHECKOUT_DOMAIN ||
+        'checkout.shopify.com',
+      storeDomain:
+        env?.PUBLIC_STORE_DOMAIN ||
+        process.env.PUBLIC_STORE_DOMAIN ||
+        'mock.shop',
     },
     // Custom directives replace Hydrogen defaults for that key — keep Shopify sources.
     styleSrc: [
