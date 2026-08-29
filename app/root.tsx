@@ -24,6 +24,8 @@ import {
   getBestSellers,
   isStaticCatalogue,
 } from '~/lib/static-catalogue';
+import {canUseShopifyCustomerAnalytics} from '~/lib/shopify-config';
+import {BRAND} from '~/lib/brand';
 
 export type RootLoader = typeof loader;
 
@@ -97,16 +99,19 @@ export async function loader(args: Route.LoaderArgs) {
   const criticalData = await loadCriticalData(args);
 
   const {storefront, env} = args.context;
+  const analyticsEnabled = canUseShopifyCustomerAnalytics(env);
 
-  let shop;
-  try {
-    shop = getShopAnalytics({
-      storefront,
-      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-    });
-  } catch (error) {
-    console.error('getShopAnalytics failed', error);
-    shop = null;
+  let shop = null;
+  if (analyticsEnabled) {
+    try {
+      shop = getShopAnalytics({
+        storefront,
+        publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+      });
+    } catch (error) {
+      console.error('getShopAnalytics failed', error);
+      shop = null;
+    }
   }
 
   return {
@@ -118,13 +123,15 @@ export async function loader(args: Route.LoaderArgs) {
       metaPixel: env.PUBLIC_META_PIXEL_ID || undefined,
     },
     shop,
-    consent: {
-      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
-      storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
-      country: args.context.storefront.i18n.country,
-      language: args.context.storefront.i18n.language,
-    },
+    consent: analyticsEnabled
+      ? {
+          checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+          storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+          withPrivacyBanner: false,
+          country: args.context.storefront.i18n.country,
+          language: args.context.storefront.i18n.language,
+        }
+      : null,
   };
 }
 
@@ -133,7 +140,22 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const {storefront} = context;
+  const {storefront, env} = context;
+
+  if (isStaticCatalogue(env)) {
+    return {
+      header: {
+        shop: {
+          id: 'gid://shopify/Shop/static',
+          name: BRAND.name,
+          description: BRAND.tagline,
+          primaryDomain: {url: BRAND.siteUrl},
+          brand: {logo: null},
+        },
+        menu: null,
+      },
+    };
+  }
 
   const [header] = await Promise.all([
     storefront.query(HEADER_QUERY, {
@@ -158,18 +180,20 @@ function loadDeferredData({context}: Route.LoaderArgs) {
   const staticMode = isStaticCatalogue(env);
 
   // defer the footer query (below the fold)
-  const footer = storefront
-    .query(FOOTER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
-      },
-    })
-    .catch((error: Error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
-      return null;
-    });
+  const footer = staticMode
+    ? Promise.resolve(null)
+    : storefront
+        .query(FOOTER_QUERY, {
+          cache: storefront.CacheLong(),
+          variables: {
+            footerMenuHandle: 'footer', // Adjust to your footer menu handle
+          },
+        })
+        .catch((error: Error) => {
+          // Log query errors, but don't throw them so the page can still render
+          console.error(error);
+          return null;
+        });
 
   const recommendedProducts = staticMode
     ? Promise.resolve(getBestSellers(4))
@@ -184,25 +208,27 @@ function loadDeferredData({context}: Route.LoaderArgs) {
         });
 
   // Customer Account API is unavailable on mock.shop and until Headless CAAPI is configured
-  const isLoggedIn = Promise.resolve(false)
-    .then(async () => {
-      try {
-        return await customerAccount.isLoggedIn();
-      } catch (error) {
-        console.error('customerAccount.isLoggedIn failed', error);
-        return false;
-      }
-    });
+  const isLoggedIn = staticMode
+    ? Promise.resolve(false)
+    : Promise.resolve(false).then(async () => {
+        try {
+          return await customerAccount.isLoggedIn();
+        } catch (error) {
+          console.error('customerAccount.isLoggedIn failed', error);
+          return false;
+        }
+      });
 
-  const cartPromise = Promise.resolve(null as CartApiQueryFragment | null)
-    .then(async () => {
-      try {
-        return await cart.get();
-      } catch (error) {
-        console.error('cart.get failed', error);
-        return null;
-      }
-    });
+  const cartPromise = staticMode
+    ? Promise.resolve(null as CartApiQueryFragment | null)
+    : Promise.resolve(null as CartApiQueryFragment | null).then(async () => {
+        try {
+          return await cart.get();
+        } catch (error) {
+          console.error('cart.get failed', error);
+          return null;
+        }
+      });
 
   return {
     cart: cartPromise,
@@ -248,7 +274,7 @@ export default function App() {
     </PageLayout>
   );
 
-  if (!data.shop) {
+  if (!data.shop || !data.consent) {
     return (
       <>
         {page}

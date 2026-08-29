@@ -5,6 +5,28 @@ import {
 import {waitUntil as vercelWaitUntil} from '@vercel/functions';
 import * as reactRouterBuild from 'virtual:react-router/server-build';
 import {createHydrogenRouterContext} from '~/lib/context';
+import {looksLikePrivateAccessToken} from '~/lib/shopify-config';
+
+/**
+ * Node/undici requires `duplex` when fetch() is given a request body.
+ * Hydrogen Storefront POSTs otherwise throw and the page returns HTTP 500.
+ */
+function patchFetchDuplex() {
+  const originalFetch = globalThis.fetch;
+  const patched = ((
+    input: Parameters<typeof fetch>[0],
+    init?: Parameters<typeof fetch>[1] & {duplex?: 'half' | 'full'},
+  ) => {
+    if (init?.body != null && init.duplex == null) {
+      return originalFetch(input, {...init, duplex: 'half'});
+    }
+    return originalFetch(input, init);
+  }) as typeof fetch;
+
+  globalThis.fetch = patched;
+}
+
+patchFetchDuplex();
 
 function waitUntil(promise: Promise<unknown>) {
   try {
@@ -24,10 +46,19 @@ function cleanEnvValue(value: string | undefined): string {
 
 function readEnv(): Env {
   const env = process.env;
+  const publicToken = cleanEnvValue(env.PUBLIC_STOREFRONT_API_TOKEN);
+
+  if (looksLikePrivateAccessToken(publicToken)) {
+    console.error(
+      'PUBLIC_STOREFRONT_API_TOKEN looks like a private/admin token. Set the 32-character public Storefront API token from the Headless channel. Do not use PRIVATE_STOREFRONT_API_TOKEN or shpat_ keys in client consent.',
+    );
+  }
+
   return {
     SESSION_SECRET: cleanEnvValue(env.SESSION_SECRET),
     PUBLIC_STORE_DOMAIN: cleanEnvValue(env.PUBLIC_STORE_DOMAIN),
-    PUBLIC_STOREFRONT_API_TOKEN: cleanEnvValue(env.PUBLIC_STOREFRONT_API_TOKEN),
+    // Public token only — never read PRIVATE_STOREFRONT_API_TOKEN into this object.
+    PUBLIC_STOREFRONT_API_TOKEN: publicToken,
     PUBLIC_STOREFRONT_ID: cleanEnvValue(env.PUBLIC_STOREFRONT_ID),
     PUBLIC_CHECKOUT_DOMAIN: cleanEnvValue(env.PUBLIC_CHECKOUT_DOMAIN),
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID:

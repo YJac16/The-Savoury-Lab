@@ -27,24 +27,41 @@ Catalogue data uses a **static food menu** with local placeholder images while `
 |----------|--------|
 | `SESSION_SECRET` | Random secret |
 | `PUBLIC_STORE_DOMAIN` | `mock.shop` |
-| `PUBLIC_STOREFRONT_API_TOKEN` | `public` |
-| `PUBLIC_STOREFRONT_ID` | `mock` |
+| `PUBLIC_STOREFRONT_API_TOKEN` | `public` (mock placeholder only) |
+| `PUBLIC_STOREFRONT_ID` | `mock` (placeholder only) |
 | `PUBLIC_CHECKOUT_DOMAIN` | `checkout.shopify.com` |
+
+Mock values are **not** a real storefront. The storefront disables Shopify Customer Privacy / PerfKit analytics until a real public token and storefront id are set — otherwise the browser logs `private access token used instead of public` and `Invalid storefrontId`.
+
+## Required Vercel env vars (names only — never commit token values)
+
+Set these on the **the-savoury-lab** project for Production and Preview. Use the **public** Storefront API token from the Headless / Hydrogen sales channel.
+
+| Variable | What to set |
+|----------|-------------|
+| `SESSION_SECRET` | Long random string |
+| `PUBLIC_STORE_DOMAIN` | `your-store.myshopify.com` (or `mock.shop` for the static catalogue) |
+| `PUBLIC_STOREFRONT_API_TOKEN` | **32-character public** Storefront API token. Not an Admin `shpat_` key. Not `PRIVATE_STOREFRONT_API_TOKEN`. |
+| `PUBLIC_STOREFRONT_ID` | Headless / Hydrogen storefront id (numeric). Do not use `mock` once a real store is linked. |
+| `PUBLIC_CHECKOUT_DOMAIN` | Checkout host, often `checkout.shopify.com` or `your-store.myshopify.com` |
+
+Do **not** put `PRIVATE_STOREFRONT_API_TOKEN` or Admin API tokens in client-facing Hydrogen consent. The server only reads `PUBLIC_STOREFRONT_API_TOKEN`.
 
 ## When you create a Shopify account
 
 1. Sign up at [shopify.com](https://www.shopify.com) (trial is fine).
 2. Install the **Headless** (or Hydrogen) sales channel.
-3. Locally:
+3. Copy the **public** Storefront API token (32 characters) and storefront id — not the Admin API token.
+4. Locally (optional):
 
 ```bash
 npx shopify hydrogen link
 npx shopify hydrogen env pull
 ```
 
-4. Replace mock.shop values in Vercel → Settings → Environment Variables.
-5. Redeploy (`npx vercel --prod` or push after commit).
-6. Follow [SHOPIFY_ADMIN_CHECKLIST.md](./SHOPIFY_ADMIN_CHECKLIST.md).
+5. Replace mock.shop values in Vercel → Settings → Environment Variables. Confirm `PUBLIC_STOREFRONT_API_TOKEN` is the public token, not a private/admin token that Hydrogen env pull may also write as `PRIVATE_STOREFRONT_API_TOKEN`.
+6. Redeploy (`npx vercel --prod` or push after commit).
+7. Follow [SHOPIFY_ADMIN_CHECKLIST.md](./SHOPIFY_ADMIN_CHECKLIST.md).
 
 ## Optional marketing env
 

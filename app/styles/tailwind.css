@@ -176,9 +176,9 @@
   .surface-hero-scrim {
     background-image: linear-gradient(
       180deg,
-      rgba(17, 17, 17, 0.2) 0%,
-      rgba(17, 17, 17, 0.55) 42%,
-      rgba(17, 17, 17, 0.94) 88%
+      rgba(17, 17, 17, 0.12) 0%,
+      rgba(17, 17, 17, 0.38) 48%,
+      rgba(17, 17, 17, 0.82) 88%
     );
   }
 

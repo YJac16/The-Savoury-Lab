@@ -23,6 +23,19 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    // Custom directives replace Hydrogen defaults for that key — keep Shopify sources.
+    styleSrc: [
+      "'self'",
+      "'unsafe-inline'",
+      'https://cdn.shopify.com',
+      'https://fonts.googleapis.com',
+    ],
+    fontSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
+      'https://fonts.googleapis.com',
+      'https://fonts.gstatic.com',
+    ],
   });
 
   return new Promise<Response>((resolve, reject) => {

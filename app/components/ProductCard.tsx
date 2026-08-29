@@ -105,9 +105,15 @@ export function ProductCard({
 
         <p className="text-sm text-ink-muted">
           {viaWhatsApp ? (
-            <>From <Money data={product.priceRange.minVariantPrice} /></>
+            <>
+              From{' '}
+              <Money
+                as="span"
+                data={product.priceRange.minVariantPrice}
+              />
+            </>
           ) : (
-            <Money data={product.priceRange.minVariantPrice} />
+            <Money as="span" data={product.priceRange.minVariantPrice} />
           )}
         </p>
 
