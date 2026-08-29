@@ -39,6 +39,9 @@ export const NAV_LINKS = [
  * Collection handles must match Shopify Admin collection handles.
  * Create automatic collections in Admin with these handles.
  */
+/** Dedicated homepage hero still — not the first collection tile. */
+export const HERO_IMAGE_SRC = '/images/catalogue/samoosas.jpg';
+
 export const CATEGORIES = [
   {
     handle: 'samoosas',

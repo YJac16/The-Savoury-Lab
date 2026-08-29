@@ -12,7 +12,7 @@ import {NewsletterForm} from '~/components/NewsletterForm';
 import {FaqAccordion} from '~/components/FaqAccordion';
 import {JsonLd} from '~/components/JsonLd';
 import {buildSeo, faqJsonLd, organizationJsonLd} from '~/lib/seo';
-import {FAQ_ITEMS} from '~/lib/brand';
+import {FAQ_ITEMS, HERO_IMAGE_SRC} from '~/lib/brand';
 import {
   getBestSellers,
   getFeaturedCollections,
@@ -28,7 +28,7 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {storefront, env} = context;
+  const {storefront, env} = context ?? {};
 
   if (isStaticCatalogue(env)) {
     const collections = getFeaturedCollections();
@@ -36,8 +36,8 @@ export async function loader({context}: Route.LoaderArgs) {
     return {
       collections,
       products,
-      heroImage: collections[0]?.image?.url,
-      heroVideoUrl: env.PUBLIC_HERO_VIDEO_URL || undefined,
+      heroImage: HERO_IMAGE_SRC,
+      heroVideoUrl: env?.PUBLIC_HERO_VIDEO_URL || undefined,
     };
   }
 
@@ -49,7 +49,7 @@ export async function loader({context}: Route.LoaderArgs) {
   const heroImage =
     collections.nodes.find(
       (node: {image?: {url?: string} | null}) => Boolean(node.image),
-    )?.image?.url ?? undefined;
+    )?.image?.url ?? HERO_IMAGE_SRC;
 
   return {
     collections: collections.nodes,

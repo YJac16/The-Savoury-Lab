@@ -9,7 +9,7 @@ Temporary AI placeholders live in `public/images/catalogue/`. Replace with real 
 | Count | 10 (one per category handle) |
 | Aspect | 1:1 |
 | Min size | 1200×1200 |
-| Format | JPG or WebP, ideally under ~400KB each |
+| Format | Real JPEG (`JFIF`/`FF D8`), ideally under ~400KB each. Do not save PNG bytes as `.jpg` — Vercel then serves `image/jpeg` and browsers report incomplete images. |
 | Style | Overhead or 45° plate shot, warm kitchen light, plain/neutral surface, no text overlays |
 | Path | `public/images/catalogue/{handle}.jpg` |
 

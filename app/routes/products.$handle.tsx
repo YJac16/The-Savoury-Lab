@@ -244,7 +244,7 @@ function StaticProductPage({
                 </ul>
                 <p className="pt-2 text-sm text-ink-muted">
                   From{' '}
-                  <Money data={product.priceRange.minVariantPrice} />
+                  <Money as="span" data={product.priceRange.minVariantPrice} />
                 </p>
               </div>
 
@@ -300,7 +300,7 @@ function StaticProductPage({
           <div className="min-w-0 flex-1">
             <p className="truncate font-display text-base">{product.title}</p>
             <p className="text-sm text-ink-muted">
-              From <Money data={product.priceRange.minVariantPrice} />
+              From <Money as="span" data={product.priceRange.minVariantPrice} />
             </p>
           </div>
           <a

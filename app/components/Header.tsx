@@ -1,10 +1,6 @@
 import {Suspense, useEffect, useState} from 'react';
 import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
-import {
-  type CartViewPayload,
-  useAnalytics,
-  useOptimisticCart,
-} from '@shopify/hydrogen';
+import {useOptimisticCart} from '@shopify/hydrogen';
 import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {Logo} from '~/components/Logo';
@@ -222,7 +218,6 @@ function AccountLink({
 
 function CartBadge({count, className}: {count: number; className: string}) {
   const {open} = useAside();
-  const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
     <button
@@ -230,12 +225,6 @@ function CartBadge({count, className}: {count: number; className: string}) {
       className={`relative flex h-10 w-10 items-center justify-center ${className}`}
       onClick={() => {
         open('cart');
-        void publish('cart_viewed', {
-          cart,
-          prevCart,
-          shop,
-          url: window.location.href || '',
-        } as CartViewPayload);
       }}
       aria-label={`Open cart, ${count} items`}
     >

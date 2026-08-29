@@ -1,10 +1,13 @@
-import {useState, type FormEvent} from 'react';
+import {useId, useState, type FormEvent} from 'react';
 import {BRAND} from '~/lib/brand';
 import {Button} from '~/components/ui/Button';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 export function NewsletterForm({className = ''}: {className?: string}) {
+  const formId = useId();
+  const companyFieldId = `${formId}-company`;
+  const emailFieldId = `${formId}-email`;
   const [email, setEmail] = useState('');
   const [state, setState] = useState<FormState>('idle');
   const [message, setMessage] = useState('');
@@ -75,9 +78,9 @@ export function NewsletterForm({className = ''}: {className?: string}) {
           noValidate
         >
           <div aria-hidden="true" className="honeypot">
-            <label htmlFor="newsletter-company">Company</label>
+            <label htmlFor={companyFieldId}>Company</label>
             <input
-              id="newsletter-company"
+              id={companyFieldId}
               name="company"
               type="text"
               tabIndex={-1}
@@ -85,11 +88,11 @@ export function NewsletterForm({className = ''}: {className?: string}) {
               defaultValue=""
             />
           </div>
-          <label htmlFor="newsletter-email" className="sr-only">
+          <label htmlFor={emailFieldId} className="sr-only">
             Email address
           </label>
           <input
-            id="newsletter-email"
+            id={emailFieldId}
             name="email"
             type="email"
             autoComplete="email"

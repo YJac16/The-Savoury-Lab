@@ -14,10 +14,10 @@
 ## 1. Headless channel & API
 
 - [ ] Create a Storefront API token with product/collection/cart scopes
-- [ ] Copy into Vercel / `.env`:
+- [ ] Copy into Vercel / `.env` (public names only — do not commit values):
   - `PUBLIC_STORE_DOMAIN` (e.g. `your-store.myshopify.com`)
-  - `PUBLIC_STOREFRONT_API_TOKEN`
-  - `PUBLIC_STOREFRONT_ID`
+  - `PUBLIC_STOREFRONT_API_TOKEN` (32-character **public** token, not `shpat_` / not `PRIVATE_STOREFRONT_API_TOKEN`)
+  - `PUBLIC_STOREFRONT_ID` (real Headless storefront id, not `mock`)
   - `PUBLIC_CHECKOUT_DOMAIN`
   - `SESSION_SECRET` (long random string)
 - [ ] Optional Customer Account API: `PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID`, `PUBLIC_CUSTOMER_ACCOUNT_API_URL`

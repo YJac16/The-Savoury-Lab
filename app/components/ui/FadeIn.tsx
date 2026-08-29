@@ -33,22 +33,21 @@ export function FadeIn({
   const Component = MOTION_TAGS[as] ?? motion.div;
   const prefersReducedMotion = useReducedMotion();
 
-  if (prefersReducedMotion) {
-    const StaticTag = as;
-    return <StaticTag className={className}>{children}</StaticTag>;
-  }
-
   return (
     <Component
       className={className}
       initial={{opacity: 0, y: 24}}
       whileInView={{opacity: 1, y: 0}}
       viewport={{once: true, amount: 0.2}}
-      transition={{
-        duration: 0.7,
-        ease: [0.22, 1, 0.36, 1],
-        delay,
-      }}
+      transition={
+        prefersReducedMotion
+          ? {duration: 0, delay: 0}
+          : {
+              duration: 0.7,
+              ease: [0.22, 1, 0.36, 1],
+              delay,
+            }
+      }
     >
       {children}
     </Component>

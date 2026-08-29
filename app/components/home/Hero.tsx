@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {motion, useReducedMotion, useScroll, useTransform} from 'framer-motion';
 import {BRAND} from '~/lib/brand';
 import {Button} from '~/components/ui/Button';
@@ -12,6 +12,8 @@ type HeroProps = {
 export function Hero({posterUrl, videoUrl}: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [playVideo, setPlayVideo] = useState(false);
+  const [mediaFailed, setMediaFailed] = useState(false);
   const {scrollYProgress} = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -26,7 +28,16 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
     [0, 1],
     prefersReducedMotion ? ['0%', '0%'] : ['0%', '12%'],
   );
-  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.55, 0.75]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.35, 0.55]);
+
+  useEffect(() => {
+    if (videoUrl && prefersReducedMotion === false) {
+      setPlayVideo(true);
+    }
+  }, [videoUrl, prefersReducedMotion]);
+
+  const showVideo = Boolean(playVideo && videoUrl && !mediaFailed);
+  const showImage = Boolean(posterUrl && !showVideo && !mediaFailed);
 
   return (
     <section
@@ -35,11 +46,11 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
       aria-label="Hero"
     >
       <motion.div
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0"
         style={{y: backgroundY}}
         aria-hidden="true"
       >
-        {videoUrl && !prefersReducedMotion ? (
+        {showVideo ? (
           <video
             className="media-parallax"
             autoPlay
@@ -49,35 +60,34 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
             poster={posterUrl}
             preload="metadata"
             aria-hidden="true"
+            onError={() => setMediaFailed(true)}
           >
             <source src={videoUrl} type="video/mp4" />
             <track kind="captions" />
           </video>
-        ) : posterUrl ? (
+        ) : showImage ? (
           <img
             src={posterUrl}
             alt=""
             className="media-parallax"
             loading="eager"
-            fetchPriority="high"
+            decoding="async"
+            sizes="100vw"
+            onError={() => setMediaFailed(true)}
           />
         ) : (
           <div className="surface-hero-fallback size-full" />
         )}
         <div className="surface-hero-scrim absolute inset-0" />
         <motion.div
-          className="absolute inset-0 mix-blend-soft-light"
-          style={{
-            opacity: overlayOpacity,
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")',
-          }}
+          className="surface-hero-grain absolute inset-0 mix-blend-soft-light"
+          style={{opacity: overlayOpacity}}
         />
       </motion.div>
 
       <motion.div
         style={{y: contentY}}
-        className="container-premium w-full pb-16 pt-32 sm:pb-24 sm:pt-40"
+        className="container-premium relative z-10 w-full pb-16 pt-32 sm:pb-24 sm:pt-40"
       >
         <FadeIn delay={0.1}>
           <p className="eyebrow mb-5 text-accent-soft">{BRAND.name}</p>
