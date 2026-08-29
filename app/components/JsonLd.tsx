@@ -19,7 +19,8 @@ export function JsonLd({data}: JsonLdProps) {
           <script
             key={key}
             type="application/ld+json"
-            nonce={nonce}
+            nonce={nonce || undefined}
+            suppressHydrationWarning
             dangerouslySetInnerHTML={{__html: JSON.stringify(item)}}
           />
         );

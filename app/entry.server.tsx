@@ -43,6 +43,12 @@ export default async function handleRequest(
       'https://fonts.googleapis.com',
       'https://fonts.gstatic.com',
     ],
+    imgSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
+      'https://shopify.com',
+      'data:',
+    ],
   });
 
   return new Promise<Response>((resolve, reject) => {

@@ -71,7 +71,6 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
             alt=""
             className="media-parallax"
             loading="eager"
-            fetchPriority="high"
             decoding="async"
             sizes="100vw"
             onError={() => setMediaFailed(true)}
@@ -81,12 +80,8 @@ export function Hero({posterUrl, videoUrl}: HeroProps) {
         )}
         <div className="surface-hero-scrim absolute inset-0" />
         <motion.div
-          className="absolute inset-0 mix-blend-soft-light"
-          style={{
-            opacity: overlayOpacity,
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.5\'/%3E%3C/svg%3E")',
-          }}
+          className="surface-hero-grain absolute inset-0 mix-blend-soft-light"
+          style={{opacity: overlayOpacity}}
         />
       </motion.div>
 
