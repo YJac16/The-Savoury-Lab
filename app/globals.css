@@ -49,7 +49,6 @@ h4 {
   font-family: var(--font-display), ui-serif, Georgia, serif;
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--color-brand);
 }
 
 :focus-visible {
@@ -217,7 +216,7 @@ h4 {
 }
 
 .mobile-sticky-offset {
-  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(73px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (min-width: 768px) {
@@ -273,6 +272,11 @@ h4 {
     rgba(17, 17, 17, 0.82) 42%,
     rgba(17, 17, 17, 0.98) 100%
   );
+}
+
+#top h1 {
+  color: var(--color-brand-inverse);
+  opacity: 1;
 }
 
 .surface-instagram-fallback {

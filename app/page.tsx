@@ -30,13 +30,13 @@ export default function HomePage() {
       <SiteHeader />
       <Hero />
 
-      <main id="main-content" className="mobile-sticky-offset">
+      <main id="main-content">
         <FeaturedCategories />
         <BestSellers />
 
         <section
           id="menu"
-          className="section-pad scroll-mt-24 bg-brand-inverse pb-28 md:pb-0"
+          className="section-pad scroll-mt-24 bg-brand-inverse"
           aria-label="Menu"
         >
           <div className="container-premium">
