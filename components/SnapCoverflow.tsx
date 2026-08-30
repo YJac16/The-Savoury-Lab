@@ -74,15 +74,22 @@ export function SnapCoverflow({
     onActiveIndexChange?.(activeIndex);
   }, [activeIndex, onActiveIndexChange]);
 
+  const wrapIndex = useCallback(
+    (index: number) => {
+      if (count === 0) return 0;
+      return ((index % count) + count) % count;
+    },
+    [count],
+  );
+
   const goTo = useCallback(
     (index: number) => {
       if (count === 0) return;
-      const clamped = Math.max(0, Math.min(count - 1, index));
       setAnimating(true);
-      setActiveIndex(clamped);
+      setActiveIndex(wrapIndex(index));
       setDragOffset(0);
     },
-    [count],
+    [count, wrapIndex],
   );
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {

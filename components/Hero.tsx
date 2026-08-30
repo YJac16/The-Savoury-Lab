@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { BRAND } from "@/lib/brand";
-import { WHOLESALE_URL } from "@/lib/site";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 
 export function Hero() {
@@ -33,11 +32,8 @@ export function Hero() {
           Made with quality ingredients. Prepared fresh. Frozen for your
           convenience.
         </p>
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="mt-10">
           <WhatsAppLink className="btn-primary">Order on WhatsApp</WhatsAppLink>
-          <WhatsAppLink href={WHOLESALE_URL} className="btn-secondary">
-            Wholesale orders
-          </WhatsAppLink>
         </div>
       </div>
     </section>

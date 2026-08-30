@@ -77,19 +77,11 @@ export function FeaturedCategories() {
             <CarouselDetailPlate
               title={active.title}
               description={active.description}
-              meta={<p>Tap a card or order below on WhatsApp.</p>}
+              meta={<p>Tap a card to order on WhatsApp, or view the menu.</p>}
               actions={
-                <>
-                  <a href={`#${active.menuAnchor}`} className="btn-outline w-full">
-                    View menu
-                  </a>
-                  <WhatsAppLink
-                    href={categoryOrderUrl(active.title)}
-                    className="btn-primary w-full"
-                  >
-                    Order on WhatsApp
-                  </WhatsAppLink>
-                </>
+                <a href={`#${active.menuAnchor}`} className="btn-outline w-full">
+                  View menu
+                </a>
               }
             />
           ) : null}
