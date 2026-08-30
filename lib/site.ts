@@ -23,9 +23,16 @@ export function orderUrl(product: string, pack?: string) {
   return whatsappUrl(orderMessage(product, pack));
 }
 
+export function categoryOrderUrl(categoryTitle: string) {
+  return whatsappUrl(`Hi The Savoury Lab, I'd like to order ${categoryTitle}.`);
+}
+
 export const GENERAL_ORDER_URL = whatsappUrl(
   "Hi The Savoury Lab, I'd like to place an order.",
 );
 export const WHOLESALE_URL = whatsappUrl(
   "Hi The Savoury Lab, I'd like to enquire about a wholesale order.",
 );
+
+export const BILS_URL = "https://bils.co.za/";
+export const BILS_INSTAGRAM_URL = "https://www.instagram.com/brother_in_laws_/";

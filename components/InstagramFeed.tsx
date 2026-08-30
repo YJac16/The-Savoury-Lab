@@ -39,7 +39,7 @@ export function InstagramFeed() {
                   alt={tile.title}
                   fill
                   sizes="(min-width: 1024px) 33vw, 50vw"
-                  className="object-cover transition-media group-hover:scale-105"
+                  className="object-cover transition-media media-zoom-hover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand/80 via-brand/20 to-transparent" />
                 <div className="relative flex h-full flex-col justify-end p-4 sm:p-5">

@@ -182,8 +182,48 @@ h4 {
   transition: background-size 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.link-underline:hover {
+.link-underline:focus-visible {
   background-size: 100% 1px;
+}
+
+.menu-table-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.menu-table-sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  .media-zoom-hover:hover {
+    transform: scale(1.05);
+  }
+}
+
+.snap-coverflow {
+  --coverflow-slide-width: min(78vw, 18rem);
+  --coverflow-slide-half: calc(var(--coverflow-slide-width) / 2);
+}
+
+.coverflow-slide {
+  width: var(--coverflow-slide-width);
+}
+
+.mobile-sticky-offset {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+  .mobile-sticky-offset {
+    padding-bottom: 0;
+  }
 }
 
 .skip-link {

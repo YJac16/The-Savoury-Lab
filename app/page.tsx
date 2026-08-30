@@ -1,3 +1,4 @@
+import { AffiliationStrip } from "@/components/AffiliationStrip";
 import { BestSellers } from "@/components/BestSellers";
 import { ExtrasSection, MenuSection } from "@/components/MenuSection";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -29,13 +30,13 @@ export default function HomePage() {
       <SiteHeader />
       <Hero />
 
-      <main id="main-content">
+      <main id="main-content" className="mobile-sticky-offset">
         <FeaturedCategories />
         <BestSellers />
 
         <section
           id="menu"
-          className="section-pad scroll-mt-24 bg-brand-inverse"
+          className="section-pad scroll-mt-24 bg-brand-inverse pb-28 md:pb-0"
           aria-label="Menu"
         >
           <div className="container-premium">
@@ -86,6 +87,8 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+
+      <AffiliationStrip />
 
       <footer
         id="contact"
