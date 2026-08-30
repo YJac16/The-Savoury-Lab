@@ -85,8 +85,12 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="border-t border-neutral-muted bg-neutral px-4 py-10 text-center">
+      <footer
+        id="contact"
+        className="scroll-mt-24 border-t border-neutral-muted bg-neutral px-4 py-10 text-center"
+      >
         <div className="container-premium">
+          <p className="eyebrow mb-3">Contact</p>
           <p className="font-display text-lg">{BRAND.name}</p>
           <p className="mt-3 text-sm text-ink-muted">
             Halaal · Kenilworth collect · All items sold frozen

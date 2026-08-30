@@ -21,7 +21,7 @@ export function Hero() {
         <div className="surface-hero-scrim absolute inset-0" />
       </div>
 
-      <div className="container-premium w-full pb-20 pt-28 sm:pb-24 sm:pt-36">
+      <div className="container-premium w-full pb-20 pt-36 sm:pb-24 sm:pt-40">
         <p className="eyebrow mb-5 text-accent-soft">{BRAND.name}</p>
         <h1 className="max-w-3xl text-balance text-4xl leading-[1.08] text-brand-inverse sm:text-5xl md:text-6xl lg:text-7xl">
           Handcrafted Frozen Savouries

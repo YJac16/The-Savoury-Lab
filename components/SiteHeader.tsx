@@ -4,8 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NAV_LINKS } from "@/lib/brand";
-import { SITE_NAME } from "@/lib/site";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, SITE_NAME } from "@/lib/site";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+
+function navLinkClass(lightText: boolean) {
+  return `link-underline font-sans text-[0.7rem] font-medium uppercase tracking-[0.16em] transition-colors duration-300 ${
+    lightText
+      ? "text-brand-inverse/90 hover:text-accent-soft"
+      : "text-brand hover:text-accent"
+  }`;
+}
+
+function utilityLinkClass(lightText: boolean) {
+  return `font-sans text-[0.65rem] font-medium uppercase tracking-[0.16em] transition-colors duration-300 ${
+    lightText
+      ? "text-brand-inverse/90 hover:text-accent-soft"
+      : "text-brand hover:text-accent"
+  }`;
+}
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -43,46 +59,46 @@ export function SiteHeader() {
         </Link>
 
         <nav
-          className="mx-auto hidden items-center gap-8 lg:flex"
+          className="mx-auto hidden items-center gap-8 md:flex"
           aria-label="Primary"
         >
           {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`link-underline font-sans text-[0.7rem] font-medium uppercase tracking-[0.16em] transition-colors duration-300 ${
-                lightText
-                  ? "text-brand-inverse/90 hover:text-accent-soft"
-                  : "text-brand hover:text-accent"
-              }`}
-            >
+            <a key={link.href} href={link.href} className={navLinkClass(lightText)}>
               {link.title}
             </a>
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-3">
-          <WhatsAppLink
-            className={`hidden min-h-10 items-center justify-center px-4 text-[0.65rem] font-medium uppercase tracking-[0.16em] sm:inline-flex ${
-              lightText
-                ? "border border-brand-inverse/40 text-brand-inverse hover:border-accent hover:bg-accent hover:text-brand"
-                : "btn-primary py-0"
-            }`}
-          >
-            Order on WhatsApp
+        <nav
+          className="ml-auto flex items-center gap-4 sm:gap-5"
+          aria-label="Contact"
+        >
+          <WhatsAppLink className={utilityLinkClass(lightText)}>
+            WhatsApp
           </WhatsAppLink>
           <a
-            href="#menu"
-            className={`link-underline font-sans text-[0.7rem] font-medium uppercase tracking-[0.16em] lg:hidden ${
-              lightText
-                ? "text-brand-inverse/90 hover:text-accent-soft"
-                : "text-brand hover:text-accent"
-            }`}
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={utilityLinkClass(lightText)}
           >
-            Menu
+            @{INSTAGRAM_HANDLE}
           </a>
-        </div>
+        </nav>
       </div>
+
+      <nav
+        className={`container-premium flex gap-5 pb-3 pt-2 md:hidden ${
+          solid ? "border-t border-neutral-muted" : "border-t border-brand-inverse/10"
+        }`}
+        aria-label="Primary mobile"
+      >
+        {NAV_LINKS.map((link) => (
+          <a key={link.href} href={link.href} className={navLinkClass(lightText)}>
+            {link.title}
+          </a>
+        ))}
+      </nav>
     </header>
   );
 }

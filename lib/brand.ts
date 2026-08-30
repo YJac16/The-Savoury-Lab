@@ -172,5 +172,5 @@ export const MENU_NOTES = [
 export const NAV_LINKS = [
   { title: "Menu", href: "#menu" },
   { title: "Wholesale", href: "#wholesale" },
-  { title: "FAQ", href: "#faq" },
+  { title: "Contact", href: "#contact" },
 ] as const;
