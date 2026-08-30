@@ -13,7 +13,7 @@ export function WholesaleCta() {
         aria-hidden="true"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 80% 20%, rgba(199,154,82,0.35), transparent 45%)",
+            "radial-gradient(circle at 80% 20%, rgba(200,150,62,0.35), transparent 45%)",
         }}
       />
       <div className="container-premium section-pad relative">

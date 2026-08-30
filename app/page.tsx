@@ -1,3 +1,4 @@
+import { BestSellers } from "@/components/BestSellers";
 import { ExtrasSection, MenuSection } from "@/components/MenuSection";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeaturedCategories } from "@/components/FeaturedCategories";
@@ -30,6 +31,7 @@ export default function HomePage() {
 
       <main id="main-content">
         <FeaturedCategories />
+        <BestSellers />
 
         <section
           id="menu"

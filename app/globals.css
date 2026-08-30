@@ -6,8 +6,8 @@
 
   --color-brand: #111111;
   --color-brand-inverse: #ffffff;
-  --color-accent: #c79a52;
-  --color-accent-soft: #d4b07a;
+  --color-accent: #c8963e;
+  --color-accent-soft: #d4a85c;
   --color-neutral: #f7f7f7;
   --color-neutral-muted: #e8e8e8;
   --color-ink-muted: #6b6b6b;
@@ -97,7 +97,7 @@ h4 {
 }
 
 .eyebrow {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-display), ui-serif, Georgia, serif;
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -229,9 +229,9 @@ h4 {
 .surface-hero-scrim {
   background-image: linear-gradient(
     180deg,
-    rgba(17, 17, 17, 0.35) 0%,
-    rgba(17, 17, 17, 0.65) 45%,
-    rgba(17, 17, 17, 0.96) 92%
+    rgba(17, 17, 17, 0.55) 0%,
+    rgba(17, 17, 17, 0.82) 42%,
+    rgba(17, 17, 17, 0.98) 100%
   );
 }
 

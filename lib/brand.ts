@@ -172,5 +172,35 @@ export const MENU_NOTES = [
 export const NAV_LINKS = [
   { title: "Menu", href: "#menu" },
   { title: "Wholesale", href: "#wholesale" },
-  { title: "Contact", href: "#contact" },
+] as const;
+
+export const BEST_SELLERS = [
+  {
+    title: "Samoosas — Mince",
+    orderName: "Samoosas — Mince",
+    priceFrom: "R175",
+    pack: "25",
+    image: "/images/catalogue/samoosas.jpg",
+  },
+  {
+    title: "Samoosas — Chicken",
+    orderName: "Samoosas — Chicken",
+    priceFrom: "R175",
+    pack: "25",
+    image: "/images/catalogue/samoosas.jpg",
+  },
+  {
+    title: "Samoosas — Cheese",
+    orderName: "Samoosas — Cheese",
+    priceFrom: "R200",
+    pack: "25",
+    image: "/images/catalogue/samoosas.jpg",
+  },
+  {
+    title: "Samoosas — Potato",
+    orderName: "Samoosas — Potato",
+    priceFrom: "R175",
+    pack: "25",
+    image: "/images/catalogue/samoosas.jpg",
+  },
 ] as const;
