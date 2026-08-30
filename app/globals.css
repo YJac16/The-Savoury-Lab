@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #111111;
+  --color-paper: #ffffff;
+  --color-rule: #111111;
+  --color-mute: #4a4a4a;
+  --color-stripe: #f4f4f4;
+  --color-whatsapp: #128c7e;
+  --font-sans: var(--font-geist-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 80;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 0.5rem 0.75rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
