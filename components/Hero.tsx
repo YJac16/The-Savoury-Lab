@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { BRAND } from "@/lib/brand";
-import { WHATSAPP_DISPLAY } from "@/lib/site";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 
 export function Hero() {
@@ -35,10 +34,6 @@ export function Hero() {
         </p>
         <div className="mt-10">
           <WhatsAppLink className="btn-primary">Order on WhatsApp</WhatsAppLink>
-          <p className="mt-4 text-sm text-brand-inverse/75">
-            WhatsApp{" "}
-            <span className="font-medium text-brand-inverse">{WHATSAPP_DISPLAY}</span>
-          </p>
         </div>
       </div>
     </section>
