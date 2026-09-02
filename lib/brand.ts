@@ -149,7 +149,7 @@ export const FAQ_ITEMS = [
   {
     question: "Where do I collect?",
     answer:
-      "Orders are collected in Kenilworth. Message us on WhatsApp to confirm collection arrangements.",
+      "Collect at 52 Goldbourne Road, Kenilworth. Message us on WhatsApp to confirm your collection time.",
   },
   {
     question: "How do I heat them?",
@@ -180,27 +180,27 @@ export const BEST_SELLERS = [
     orderName: "Samoosas — Mince",
     priceFrom: "R175",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
+    image: "/images/best-sellers/samoosas-mince.jpg",
   },
   {
     title: "Samoosas — Chicken",
     orderName: "Samoosas — Chicken",
     priceFrom: "R175",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
+    image: "/images/best-sellers/samoosas-chicken.jpg",
   },
   {
     title: "Samoosas — Cheese",
     orderName: "Samoosas — Cheese",
     priceFrom: "R200",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
+    image: "/images/best-sellers/samoosas-cheese.jpg",
   },
   {
     title: "Samoosas — Potato",
     orderName: "Samoosas — Potato",
     priceFrom: "R175",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
+    image: "/images/best-sellers/samoosas-potato.jpg",
   },
 ] as const;

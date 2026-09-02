@@ -1,5 +1,5 @@
-import { AffiliationStrip } from "@/components/AffiliationStrip";
 import { BestSellers } from "@/components/BestSellers";
+import { CollectMap } from "@/components/CollectMap";
 import { ExtrasSection, MenuSection } from "@/components/MenuSection";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeaturedCategories } from "@/components/FeaturedCategories";
@@ -15,8 +15,10 @@ import { WholesaleCta } from "@/components/WholesaleCta";
 import { BRAND, MENU_NOTES } from "@/lib/brand";
 import { EXTRAS, MENU_SECTIONS } from "@/lib/menu";
 import {
+  COLLECT_ADDRESS,
   INSTAGRAM_HANDLE,
   INSTAGRAM_URL,
+  PHONE_TEL,
   WHATSAPP_DISPLAY,
 } from "@/lib/site";
 
@@ -88,21 +90,26 @@ export default function HomePage() {
         </section>
       </main>
 
-      <AffiliationStrip />
-
       <footer
         id="contact"
-        className="scroll-mt-24 border-t border-neutral-muted bg-neutral px-4 py-10 text-center"
+        className="scroll-mt-24 border-t border-neutral-muted bg-neutral px-4 py-10"
       >
-        <div className="container-premium">
+        <div className="container-premium mx-auto max-w-lg text-center">
           <p className="eyebrow mb-3">Contact</p>
           <p className="font-display text-lg">{BRAND.name}</p>
           <p className="mt-3 text-sm text-ink-muted">
-            Halaal · Kenilworth collect · All items sold frozen
+            Halaal · Frozen · Kenilworth collect
           </p>
           <p className="mt-4 text-sm">
+            <a
+              href={`tel:${PHONE_TEL}`}
+              className="link-underline font-medium text-brand hover:text-accent"
+            >
+              {WHATSAPP_DISPLAY}
+            </a>
+            {" · "}
             <WhatsAppLink className="link-underline font-medium text-brand hover:text-accent">
-              WhatsApp {WHATSAPP_DISPLAY}
+              WhatsApp
             </WhatsAppLink>
             {" · "}
             <a
@@ -114,7 +121,11 @@ export default function HomePage() {
               @{INSTAGRAM_HANDLE}
             </a>
           </p>
-          <p className="mt-4 text-xs text-ink-muted">Prices subject to change</p>
+          <p className="mt-4 text-sm text-ink-muted">
+            Collect: {COLLECT_ADDRESS}
+          </p>
+          <CollectMap />
+          <p className="mt-6 text-xs text-ink-muted">Prices subject to change</p>
         </div>
       </footer>
 
