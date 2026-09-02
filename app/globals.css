@@ -268,9 +268,9 @@ h4 {
 .surface-hero-scrim {
   background-image: linear-gradient(
     180deg,
-    rgba(17, 17, 17, 0.55) 0%,
-    rgba(17, 17, 17, 0.82) 42%,
-    rgba(17, 17, 17, 0.98) 100%
+    rgba(17, 17, 17, 0.3) 0%,
+    rgba(17, 17, 17, 0.55) 42%,
+    rgba(17, 17, 17, 0.82) 100%
   );
 }
 
