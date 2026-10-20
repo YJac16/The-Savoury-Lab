@@ -25,7 +25,7 @@ function CategoryCard({
       <div className="relative aspect-card overflow-hidden bg-neutral-muted">
         <Image
           src={image}
-          alt={title}
+          alt=""
           fill
           sizes="78vw"
           className="object-cover"
@@ -95,7 +95,7 @@ export function FeaturedCategories() {
                 <div className="relative aspect-card overflow-hidden bg-neutral-muted">
                   <Image
                     src={category.image}
-                    alt={category.title}
+                    alt=""
                     fill
                     sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
                     className="object-cover transition-media media-zoom-hover"

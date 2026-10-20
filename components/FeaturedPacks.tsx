@@ -14,7 +14,7 @@ export function FeaturedPacks() {
     >
       <div className="container-premium">
         <div className="mb-8 max-w-2xl md:mb-12">
-          <p className="eyebrow mb-3">Featured packs</p>
+          <p className="eyebrow mb-3">Retail packs</p>
           <h2 className="text-balance text-3xl sm:text-4xl">Order a pack</h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink-muted">
             Filling, pack size, and price from the menu. Tap to order that pack
@@ -26,13 +26,13 @@ export function FeaturedPacks() {
           {products.map((product) => (
             <li key={product.orderName}>
               <article className="flex h-full flex-col border border-neutral-muted bg-brand-inverse shadow-soft">
-                <div className="relative aspect-[3/2] overflow-hidden bg-neutral-muted">
+                <div className="relative aspect-square overflow-hidden bg-neutral-muted">
                   <Image
                     src={product.image}
-                    alt={product.orderName}
+                    alt={product.imageAlt}
                     fill
                     sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                    className="object-cover"
+                    className="object-cover object-center"
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">
@@ -45,7 +45,12 @@ export function FeaturedPacks() {
                     {product.price}
                   </p>
                   <WhatsAppLink
-                    href={orderUrl(product.orderName, product.qty)}
+                    href={orderUrl({
+                      product: product.category,
+                      filling: product.filling,
+                      pack: product.qty,
+                      price: product.price,
+                    })}
                     className="btn-primary btn-wrap mt-auto w-full"
                   >
                     Order this pack on WhatsApp

@@ -43,10 +43,12 @@ export default function HomePage() {
         >
           <div className="container-premium">
             <div className="mb-12 max-w-2xl">
-              <p className="eyebrow mb-3">Menu</p>
-              <h2 className="text-balance text-3xl sm:text-4xl">
-                Prices &amp; pack sizes
-              </h2>
+              <p className="eyebrow mb-3">Retail menu</p>
+              <h2 className="text-balance text-3xl sm:text-4xl">Pack prices</h2>
+              <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+                These prices are for retail packs. Catering, events, and monthly
+                volume use the wholesale enquiry.
+              </p>
               <p className="mt-4 text-sm leading-relaxed text-ink-muted">
                 Tap a price to order that pack on WhatsApp. Halaal. Kenilworth
                 collect. All items sold frozen.

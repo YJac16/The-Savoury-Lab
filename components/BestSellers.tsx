@@ -6,29 +6,41 @@ import { CarouselDetailPlate } from "@/components/CarouselDetailPlate";
 import { SnapCoverflow } from "@/components/SnapCoverflow";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { BEST_SELLERS } from "@/lib/brand";
-import { orderUrl } from "@/lib/site";
+import { orderUrl, type OrderDetails } from "@/lib/site";
+
+function sellerOrder(product: (typeof BEST_SELLERS)[number]) {
+  const [productName, filling] = product.orderName.split(" — ");
+  const details: OrderDetails = {
+    product: productName,
+    filling,
+    pack: product.pack,
+    price: product.priceFrom,
+  };
+  return orderUrl(details);
+}
 
 function BestSellerCard({
-  title,
+  label,
   image,
   href,
 }: {
-  title: string;
+  label: string;
   image: string;
   href: string;
 }) {
   return (
     <WhatsAppLink
       href={href}
+      ariaLabel={label}
       className="block overflow-hidden rounded-sm bg-neutral shadow-soft focus-visible:outline-offset-4"
     >
       <div className="relative aspect-square overflow-hidden bg-neutral-muted">
         <Image
           src={image}
-          alt={title}
+          alt=""
           fill
           sizes="78vw"
-          className="object-cover"
+          className="object-cover object-center"
           draggable={false}
         />
       </div>
@@ -56,9 +68,9 @@ export function BestSellers() {
             {BEST_SELLERS.map((product) => (
               <BestSellerCard
                 key={product.orderName}
-                title={product.title}
+                label={`Order ${product.title}, pack of ${product.pack}, ${product.priceFrom}`}
                 image={product.image}
-                href={orderUrl(product.orderName, product.pack)}
+                href={sellerOrder(product)}
               />
             ))}
           </SnapCoverflow>
@@ -74,7 +86,7 @@ export function BestSellers() {
               }
               actions={
                 <WhatsAppLink
-                  href={orderUrl(active.orderName, active.pack)}
+                  href={sellerOrder(active)}
                   className="btn-primary btn-wrap w-full"
                 >
                   Order this pack on WhatsApp
@@ -89,30 +101,31 @@ export function BestSellers() {
             <li key={product.orderName}>
               <article className="flex h-full flex-col">
                 <WhatsAppLink
-                  href={orderUrl(product.orderName, product.pack)}
+                  href={sellerOrder(product)}
+                  ariaLabel={`Order ${product.title}, pack of ${product.pack}, ${product.priceFrom}`}
                   className="mb-4 block overflow-hidden bg-neutral focus-visible:outline-offset-4"
                 >
                   <div className="relative aspect-square overflow-hidden bg-neutral-muted">
                     <Image
                       src={product.image}
-                      alt={product.title}
+                      alt=""
                       fill
                       sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
-                      className="object-cover transition-media media-zoom-hover"
+                      className="object-cover object-center transition-media media-zoom-hover"
                       priority={index < 4}
                     />
                   </div>
                 </WhatsAppLink>
 
                 <div className="flex flex-1 flex-col gap-3">
-                  <p className="font-display text-lg leading-snug text-brand">
+                  <h3 className="font-display text-lg leading-snug text-brand">
                     {product.title}
-                  </p>
+                  </h3>
                   <p className="text-sm text-ink-muted">
                     Pack of {product.pack} · {product.priceFrom}
                   </p>
                   <WhatsAppLink
-                    href={orderUrl(product.orderName, product.pack)}
+                    href={sellerOrder(product)}
                     className="btn-outline btn-wrap mt-auto w-full"
                   >
                     Order this pack on WhatsApp

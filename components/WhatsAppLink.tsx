@@ -5,6 +5,7 @@ type WhatsAppLinkProps = {
   children: React.ReactNode;
   className?: string;
   id?: string;
+  ariaLabel?: string;
 };
 
 export function WhatsAppLink({
@@ -12,6 +13,7 @@ export function WhatsAppLink({
   children,
   className,
   id,
+  ariaLabel,
 }: WhatsAppLinkProps) {
   return (
     <a
@@ -20,6 +22,7 @@ export function WhatsAppLink({
       target="_blank"
       rel="noopener noreferrer"
       className={className}
+      aria-label={ariaLabel}
     >
       {children}
     </a>

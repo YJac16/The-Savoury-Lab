@@ -25,7 +25,7 @@ export function StickyOrderBar() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 bg-accent pb-[env(safe-area-inset-bottom)] print:hidden md:hidden">
       <WhatsAppLink className="btn-primary w-full shadow-none">
-        Order on WhatsApp
+        Retail order
       </WhatsAppLink>
     </div>
   );

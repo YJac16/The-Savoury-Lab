@@ -2,12 +2,32 @@ import { orderUrl } from "@/lib/site";
 import type { ExtraRow, MenuSection as MenuSectionData } from "@/lib/menu";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 
-function packLabel(qty: string) {
-  return `${qty}`;
-}
-
 const priceLinkClass =
   "inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm px-2 font-medium tabular-nums text-brand underline-offset-4 focus-visible:text-accent focus-visible:underline";
+
+function PackOrderLink({
+  href,
+  pack,
+  price,
+  label,
+}: {
+  href: string;
+  pack: string;
+  price: string;
+  label: string;
+}) {
+  return (
+    <WhatsAppLink href={href} className="menu-pack-link">
+      <span>{label}</span>
+      <span className="tabular-nums">{price}</span>
+      <span className="sr-only">{`Order ${pack} on WhatsApp.`}</span>
+    </WhatsAppLink>
+  );
+}
+
+function packButtonLabel(qty: string) {
+  return /^\d+$/.test(qty) ? `Pack of ${qty}` : qty;
+}
 
 export function MenuSection({ section }: { section: MenuSectionData }) {
   return (
@@ -16,10 +36,39 @@ export function MenuSection({ section }: { section: MenuSectionData }) {
         <h3 className="text-2xl">{section.title}</h3>
         <p className="mt-1 text-sm text-ink-muted">{section.minimum}</p>
       </header>
-      <p className="mb-2 text-xs text-ink-muted md:sr-only">
+
+      <ul className="space-y-4 min-[431px]:hidden">
+        {section.rows.map((row) => (
+          <li key={row.orderName} className="border border-neutral-muted bg-brand-inverse p-4">
+            <h4 className="text-xl">{row.name}</h4>
+            <ul className="mt-3 space-y-2">
+              {row.prices.map((price, priceIndex) => {
+                const qty = section.columns[priceIndex]?.qty ?? "";
+                return (
+                  <li key={`${row.orderName}-${qty}`}>
+                    <PackOrderLink
+                      href={orderUrl({
+                        product: section.title,
+                        filling: row.name,
+                        pack: qty,
+                        price,
+                      })}
+                      pack={qty}
+                      price={price}
+                      label={packButtonLabel(qty)}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mb-2 hidden text-xs text-ink-muted min-[431px]:block md:sr-only">
         Swipe sideways to see all pack prices.
       </p>
-      <div className="menu-table-scroll -mx-5 overflow-x-auto overscroll-x-contain px-5 sm:mx-0 sm:px-0">
+      <div className="menu-table-scroll -mx-5 hidden overflow-x-auto overscroll-x-contain px-5 min-[431px]:block sm:mx-0 sm:px-0">
         <div className="rounded-sm border border-neutral-muted shadow-soft">
           <table className="w-full min-w-max border-collapse text-left text-sm">
             <caption className="sr-only">
@@ -61,12 +110,17 @@ export function MenuSection({ section }: { section: MenuSectionData }) {
                       return (
                         <td key={`${row.orderName}-${qty}`} className="px-2 py-1 text-right">
                           <WhatsAppLink
-                            href={orderUrl(row.orderName, packLabel(qty))}
+                            href={orderUrl({
+                              product: section.title,
+                              filling: row.name,
+                              pack: qty,
+                              price,
+                            })}
                             className={priceLinkClass}
                           >
                             {price}
                             <span className="sr-only">
-                              {` — order ${row.orderName}, pack of ${qty}, on WhatsApp`}
+                              {` — order ${section.title}, ${row.name}, pack size ${qty}, ${price}, on WhatsApp`}
                             </span>
                           </WhatsAppLink>
                         </td>
@@ -89,7 +143,28 @@ export function ExtrasSection({ extras }: { extras: ExtraRow[] }) {
       <header className="mb-4 border-b border-brand/10 pb-3">
         <h3 className="text-2xl">Extras</h3>
       </header>
-      <div className="menu-table-scroll -mx-5 overflow-x-auto overscroll-x-contain px-5 sm:mx-0 sm:px-0">
+
+      <ul className="space-y-4 min-[431px]:hidden">
+        {extras.map((item) => (
+          <li key={item.name} className="border border-neutral-muted bg-brand-inverse p-4">
+            <h4 className="text-xl">{item.name}</h4>
+            <div className="mt-3">
+              <PackOrderLink
+                href={orderUrl({
+                  product: item.name,
+                  pack: item.pack,
+                  price: item.price,
+                })}
+                pack={item.pack}
+                price={item.price}
+                label={item.pack}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="menu-table-scroll -mx-5 hidden overflow-x-auto overscroll-x-contain px-5 min-[431px]:block sm:mx-0 sm:px-0">
         <div className="rounded-sm border border-neutral-muted shadow-soft">
           <table className="w-full min-w-max border-collapse text-left text-sm">
             <caption className="sr-only">
@@ -116,12 +191,16 @@ export function ExtrasSection({ extras }: { extras: ExtraRow[] }) {
                   </th>
                   <td className="px-2 py-1 text-right">
                     <WhatsAppLink
-                      href={orderUrl(item.name, item.pack)}
+                      href={orderUrl({
+                        product: item.name,
+                        pack: item.pack,
+                        price: item.price,
+                      })}
                       className={priceLinkClass}
                     >
                       {item.price}
                       <span className="sr-only">
-                        {` — order ${item.name} on WhatsApp`}
+                        {` — order ${item.name}, pack size ${item.pack}, ${item.price}, on WhatsApp`}
                       </span>
                     </WhatsAppLink>
                   </td>

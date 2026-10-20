@@ -5,6 +5,7 @@ type FeaturedSpec = {
   filling: string;
   qty: string;
   image: string;
+  imageAlt: string;
 };
 
 const FEATURED_SPECS: FeaturedSpec[] = [
@@ -13,18 +14,21 @@ const FEATURED_SPECS: FeaturedSpec[] = [
     filling: "Chicken",
     qty: "25",
     image: "/images/catalogue/samoosas.jpg",
+    imageAlt: "Samoosas",
   },
   {
     sectionId: "pies-cocktail",
     filling: "Steak",
     qty: "25",
     image: "/images/catalogue/cocktail-pies.jpg",
+    imageAlt: "Cocktail pies",
   },
   {
     sectionId: "spring-rolls",
     filling: "Chicken",
     qty: "25",
     image: "/images/catalogue/spring-rolls.jpg",
+    imageAlt: "Spring rolls",
   },
 ];
 
@@ -35,6 +39,7 @@ export type FeaturedProduct = {
   qty: string;
   price: string;
   image: string;
+  imageAlt: string;
 };
 
 export function getFeaturedProducts(): FeaturedProduct[] {
@@ -58,6 +63,7 @@ export function getFeaturedProducts(): FeaturedProduct[] {
       qty: spec.qty,
       price,
       image: spec.image,
+      imageAlt: spec.imageAlt,
     };
   });
 }

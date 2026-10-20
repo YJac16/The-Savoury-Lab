@@ -12,19 +12,23 @@ export function whatsappUrl(message: string) {
   return `${WHATSAPP_BASE}?text=${encodeURIComponent(message)}`;
 }
 
-function packPhrase(pack: string) {
-  return /^\d+$/.test(pack) ? `pack of ${pack}` : pack;
+export type OrderDetails = {
+  product: string;
+  filling?: string;
+  pack: string;
+  price: string;
+};
+
+export function orderMessage({ product, filling, pack, price }: OrderDetails) {
+  const lines = ["Hi The Savoury Lab, I'd like to order:", `Product: ${product}`];
+  if (filling) lines.push(`Filling: ${filling}`);
+  lines.push(`Pack size: ${pack}`);
+  lines.push(`Price: ${price}`);
+  return lines.join("\n");
 }
 
-export function orderMessage(product: string, pack?: string) {
-  if (pack) {
-    return `Hi The Savoury Lab, I'd like to order ${product} — ${packPhrase(pack)}.`;
-  }
-  return `Hi The Savoury Lab, I'd like to order ${product}.`;
-}
-
-export function orderUrl(product: string, pack?: string) {
-  return whatsappUrl(orderMessage(product, pack));
+export function orderUrl(details: OrderDetails) {
+  return whatsappUrl(orderMessage(details));
 }
 
 export const GENERAL_ORDER_URL = whatsappUrl(
