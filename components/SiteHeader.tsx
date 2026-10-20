@@ -44,7 +44,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`transition-header fixed inset-x-0 top-0 z-40 ${
+      className={`transition-header fixed inset-x-0 top-0 z-40 pt-[env(safe-area-inset-top)] ${
         solid
           ? "border-b border-neutral-muted/80 bg-brand-inverse/95 shadow-soft backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
@@ -58,6 +58,7 @@ export function SiteHeader() {
             width={160}
             height={48}
             priority
+            sizes="160px"
             className="h-9 w-auto sm:h-10"
           />
         </Link>

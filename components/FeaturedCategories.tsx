@@ -4,30 +4,28 @@ import Image from "next/image";
 import { useState } from "react";
 import { CarouselDetailPlate } from "@/components/CarouselDetailPlate";
 import { SnapCoverflow } from "@/components/SnapCoverflow";
-import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { CATEGORIES } from "@/lib/brand";
-import { categoryOrderUrl } from "@/lib/site";
 
 function CategoryCard({
   title,
   description,
   image,
-  orderUrl,
+  href,
 }: {
   title: string;
   description: string;
   image: string;
-  orderUrl: string;
+  href: string;
 }) {
   return (
-    <WhatsAppLink
-      href={orderUrl}
+    <a
+      href={href}
       className="block overflow-hidden rounded-sm bg-neutral shadow-soft focus-visible:outline-offset-4"
     >
       <div className="relative aspect-card overflow-hidden bg-neutral-muted">
         <Image
           src={image}
-          alt={title}
+          alt=""
           fill
           sizes="78vw"
           className="object-cover"
@@ -39,7 +37,7 @@ function CategoryCard({
           <p className="mt-1 text-sm text-brand-inverse/80">{description}</p>
         </div>
       </div>
-    </WhatsAppLink>
+    </a>
   );
 }
 
@@ -68,7 +66,7 @@ export function FeaturedCategories() {
                 title={category.title}
                 description={category.description}
                 image={category.image}
-                orderUrl={categoryOrderUrl(category.title)}
+                href={`#${category.menuAnchor}`}
               />
             ))}
           </SnapCoverflow>
@@ -77,19 +75,11 @@ export function FeaturedCategories() {
             <CarouselDetailPlate
               title={active.title}
               description={active.description}
-              meta={<p>Tap a card or order below on WhatsApp.</p>}
+              meta={<p>Pack sizes and prices are in the menu.</p>}
               actions={
-                <>
-                  <a href={`#${active.menuAnchor}`} className="btn-outline w-full">
-                    View menu
-                  </a>
-                  <WhatsAppLink
-                    href={categoryOrderUrl(active.title)}
-                    className="btn-primary w-full"
-                  >
-                    Order on WhatsApp
-                  </WhatsAppLink>
-                </>
+                <a href={`#${active.menuAnchor}`} className="btn-outline w-full">
+                  View menu
+                </a>
               }
             />
           ) : null}
@@ -98,14 +88,14 @@ export function FeaturedCategories() {
         <ul className="hidden grid-cols-2 gap-6 md:grid lg:grid-cols-3 xl:grid-cols-4">
           {CATEGORIES.map((category, index) => (
             <li key={category.handle}>
-              <WhatsAppLink
-                href={categoryOrderUrl(category.title)}
+              <a
+                href={`#${category.menuAnchor}`}
                 className="group block overflow-hidden bg-neutral focus-visible:outline-offset-4"
               >
                 <div className="relative aspect-card overflow-hidden bg-neutral-muted">
                   <Image
                     src={category.image}
-                    alt={category.title}
+                    alt=""
                     fill
                     sizes="(min-width: 1280px) 300px, (min-width: 768px) 45vw, 100vw"
                     className="object-cover transition-media media-zoom-hover"
@@ -119,9 +109,12 @@ export function FeaturedCategories() {
                     <p className="mt-2 text-sm text-brand-inverse/75">
                       {category.description}
                     </p>
+                    <p className="mt-3 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-accent-soft">
+                      View prices
+                    </p>
                   </div>
                 </div>
-              </WhatsAppLink>
+              </a>
             </li>
           ))}
         </ul>

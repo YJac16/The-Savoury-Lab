@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: `${SITE_NAME} · ${TAGLINE}`,
   description:
-    "Halaal handcrafted frozen savouries, made to order. Kenilworth collect. Order on WhatsApp 065 663 2215.",
+    "Handcrafted frozen savouries made with halaal ingredients. Made to order. Kenilworth collect. Order on WhatsApp 065 663 2215.",
   icons: {
     icon: "/favicon.png",
     apple: "/apple-touch-icon.png",

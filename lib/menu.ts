@@ -18,9 +18,11 @@ export type MenuSection = {
 };
 
 export type ExtraRow = {
+  id: string;
   name: string;
   price: string;
   pack: string;
+  unit: string;
 };
 
 export const MENU_SECTIONS: MenuSection[] = [
@@ -148,9 +150,9 @@ export const MENU_SECTIONS: MenuSection[] = [
       { qty: "100", label: "100" },
     ],
     rows: [
-      { name: "Vienna", orderName: "Pizzas — Vienna", prices: ["R250", "R500", "R1000"] },
-      { name: "Chicken", orderName: "Pizzas — Chicken", prices: ["R300", "R600", "R1200"] },
-      { name: "Steak", orderName: "Pizzas — Steak", prices: ["R325", "R650", "R1300"] },
+      { name: "Vienna", orderName: "Pizzas — Vienna", prices: ["R250", "R500", "R1 000"] },
+      { name: "Chicken", orderName: "Pizzas — Chicken", prices: ["R300", "R600", "R1 200"] },
+      { name: "Steak", orderName: "Pizzas — Steak", prices: ["R325", "R650", "R1 300"] },
     ],
   },
   {
@@ -170,7 +172,25 @@ export const MENU_SECTIONS: MenuSection[] = [
 ];
 
 export const EXTRAS: ExtraRow[] = [
-  { name: "Pastry", price: "R80 / kg", pack: "1 kg" },
-  { name: "Butter Pastry", price: "R150 / kg", pack: "1 kg" },
-  { name: "Samoosa Leaves (pur)", price: "R70 / 100 sheets", pack: "100 sheets" },
+  {
+    id: "extra-pastry",
+    name: "Pastry",
+    price: "R80 per kg",
+    pack: "1 kg",
+    unit: "per kg",
+  },
+  {
+    id: "extra-butter-pastry",
+    name: "Butter Pastry",
+    price: "R150 per kg",
+    pack: "1 kg",
+    unit: "per kg",
+  },
+  {
+    id: "extra-samoosa-leaves",
+    name: "Samoosa Leaves (pur)",
+    price: "R70 per 100 sheets",
+    pack: "100 sheets",
+    unit: "per 100 sheets",
+  },
 ];

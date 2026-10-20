@@ -4,19 +4,25 @@ type WhatsAppLinkProps = {
   href?: string;
   children: React.ReactNode;
   className?: string;
+  id?: string;
+  ariaLabel?: string;
 };
 
 export function WhatsAppLink({
   href = GENERAL_ORDER_URL,
   children,
   className,
+  id,
+  ariaLabel,
 }: WhatsAppLinkProps) {
   return (
     <a
+      id={id}
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       className={className}
+      aria-label={ariaLabel}
     >
       {children}
     </a>

@@ -36,14 +36,14 @@ export function InstagramFeed() {
               >
                 <Image
                   src={tile.image}
-                  alt={tile.title}
+                  alt=""
                   fill
                   sizes="(min-width: 1024px) 33vw, 50vw"
                   className="object-cover transition-media media-zoom-hover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand/80 via-brand/20 to-transparent" />
                 <div className="relative flex h-full flex-col justify-end p-4 sm:p-5">
-                  <span className="eyebrow mb-1 text-accent-soft">
+                  <span className="eyebrow eyebrow-on-dark mb-1">
                     {BRAND.name}
                   </span>
                   <span className="font-display text-lg text-brand-inverse sm:text-xl">

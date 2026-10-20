@@ -15,7 +15,7 @@ export function HowItWorks() {
           {HOW_IT_WORKS.map((step) => (
             <li key={step.step}>
               <article>
-                <p className="eyebrow mb-4 text-brand/40">{step.step}</p>
+                <p className="eyebrow mb-4">{step.step}</p>
                 <h3 className="mb-3 text-2xl">{step.title}</h3>
                 <p className="text-sm leading-relaxed text-ink-muted">
                   {step.body}

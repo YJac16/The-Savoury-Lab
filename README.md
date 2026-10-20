@@ -1,6 +1,6 @@
 # The Savoury Lab
 
-WhatsApp order landing page for The Savoury Lab — Halaal handcrafted frozen savouries, made to order. Kenilworth collect.
+WhatsApp order landing page for The Savoury Lab — handcrafted frozen savouries, made with halaal ingredients. Made to order. Kenilworth collect.
 
 Orders go to WhatsApp: [065 663 2215](https://wa.me/27656632215). There is no cart, checkout, or account.
 

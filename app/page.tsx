@@ -3,6 +3,8 @@ import { BestSellers } from "@/components/BestSellers";
 import { ExtrasSection, MenuSection } from "@/components/MenuSection";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeaturedCategories } from "@/components/FeaturedCategories";
+import { FeaturedPacks } from "@/components/FeaturedPacks";
+import { MenuJump } from "@/components/MenuJump";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { InstagramFeed } from "@/components/InstagramFeed";
@@ -31,6 +33,7 @@ export default function HomePage() {
       <Hero />
 
       <main id="main-content">
+        <FeaturedPacks />
         <FeaturedCategories />
         <BestSellers />
 
@@ -41,13 +44,15 @@ export default function HomePage() {
         >
           <div className="container-premium">
             <div className="mb-12 max-w-2xl">
-              <p className="eyebrow mb-3">Menu</p>
-              <h2 className="text-balance text-3xl sm:text-4xl">
-                Prices &amp; pack sizes
-              </h2>
+              <p className="eyebrow mb-3">Retail menu</p>
+              <h2 className="text-balance text-3xl sm:text-4xl">Pack prices</h2>
               <p className="mt-4 text-sm leading-relaxed text-ink-muted">
-                Tap a price to order that pack on WhatsApp. Halaal. Kenilworth
-                collect. All items sold frozen.
+                These prices are for retail packs. Catering, events, and monthly
+                volume use the wholesale enquiry.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+                Tap a price to order that pack on WhatsApp. Made with halaal
+                ingredients. Kenilworth collect. All items sold frozen.
               </p>
             </div>
 
@@ -56,6 +61,8 @@ export default function HomePage() {
                 <li key={note}>{note}</li>
               ))}
             </ul>
+
+            <MenuJump />
 
             <div className="space-y-12">
               {MENU_SECTIONS.map((section) => (
@@ -98,7 +105,8 @@ export default function HomePage() {
           <p className="eyebrow mb-3">Contact</p>
           <p className="font-display text-lg">{BRAND.name}</p>
           <p className="mt-3 text-sm text-ink-muted">
-            Halaal · Kenilworth collect · All items sold frozen
+            Made with halaal ingredients · Kenilworth collect · All items sold
+            frozen
           </p>
           <p className="mt-4 text-sm">
             <WhatsAppLink className="link-underline font-medium text-brand hover:text-accent">

@@ -18,18 +18,22 @@ export function WholesaleCta() {
       />
       <div className="container-premium section-pad relative">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow mb-4 text-accent-soft">Wholesale</p>
+          <p className="eyebrow eyebrow-on-dark mb-4">Wholesale</p>
           <h2 className="text-balance text-3xl sm:text-4xl md:text-5xl">
             Catering, events &amp; consistent monthly orders
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-brand-inverse/75 sm:text-lg">
             Partner with {BRAND.name} for mosques, schools, corporate functions,
-            and celebrations. Dedicated service, reliable quality, Halaal
-            certified. Collect in Kenilworth — arrange bulk orders on WhatsApp.
+            and celebrations. Dedicated service, reliable quality, made with
+            halaal ingredients. Collect in Kenilworth — arrange bulk orders on
+            WhatsApp.
           </p>
-          <div className="mt-10">
+          <p className="mt-8 text-sm uppercase tracking-[0.16em] text-accent-soft">
+            Separate from retail pack prices
+          </p>
+          <div className="mt-6">
             <WhatsAppLink href={BRAND.contact.wholesaleUrl} className="btn-secondary">
-              Enquire on WhatsApp
+              Wholesale enquiry
             </WhatsAppLink>
           </div>
         </div>
