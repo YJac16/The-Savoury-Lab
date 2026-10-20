@@ -58,6 +58,7 @@ export function SiteHeader() {
             width={160}
             height={48}
             priority
+            sizes="160px"
             className="h-9 w-auto sm:h-10"
           />
         </Link>

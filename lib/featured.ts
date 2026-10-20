@@ -33,6 +33,7 @@ const FEATURED_SPECS: FeaturedSpec[] = [
 ];
 
 export type FeaturedProduct = {
+  sectionId: string;
   orderName: string;
   category: string;
   filling: string;
@@ -57,6 +58,7 @@ export function getFeaturedProducts(): FeaturedProduct[] {
     }
 
     return {
+      sectionId: section.id,
       orderName: row.orderName,
       category: section.title,
       filling: row.name,

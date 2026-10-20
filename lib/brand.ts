@@ -85,12 +85,12 @@ export const CATEGORIES = [
     handle: "pastry",
     menuAnchor: "extras",
     title: "Pastry",
-    description: "Butter pastry sheets.",
+    description: "Pastry sheets, sold per kilogram.",
     image: "/images/catalogue/pastry.jpg",
   },
   {
     handle: "samoosa-leaves",
-    menuAnchor: "extras",
+    menuAnchor: "extra-samoosa-leaves",
     title: "Samoosa Leaves",
     description: "Premium pastry leaves.",
     image: "/images/catalogue/samoosa-leaves.jpg",
@@ -173,33 +173,35 @@ export const NAV_LINKS = [
   { title: "Wholesale", href: "#wholesale" },
 ] as const;
 
+export const BEST_SELLER_PHOTO = {
+  src: "/images/catalogue/samoosas.jpg",
+  alt: "Samoosas",
+  href: "#samoosas",
+} as const;
+
 export const BEST_SELLERS = [
   {
     title: "Samoosas — Mince",
     orderName: "Samoosas — Mince",
     priceFrom: "R175",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
   },
   {
     title: "Samoosas — Chicken",
     orderName: "Samoosas — Chicken",
     priceFrom: "R175",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
   },
   {
     title: "Samoosas — Cheese",
     orderName: "Samoosas — Cheese",
     priceFrom: "R200",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
   },
   {
     title: "Samoosas — Potato",
     orderName: "Samoosas — Potato",
     priceFrom: "R175",
     pack: "25",
-    image: "/images/catalogue/samoosas.jpg",
   },
 ] as const;

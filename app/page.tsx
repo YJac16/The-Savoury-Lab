@@ -4,6 +4,7 @@ import { ExtrasSection, MenuSection } from "@/components/MenuSection";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeaturedCategories } from "@/components/FeaturedCategories";
 import { FeaturedPacks } from "@/components/FeaturedPacks";
+import { MenuJump } from "@/components/MenuJump";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { InstagramFeed } from "@/components/InstagramFeed";
@@ -60,6 +61,8 @@ export default function HomePage() {
                 <li key={note}>{note}</li>
               ))}
             </ul>
+
+            <MenuJump />
 
             <div className="space-y-12">
               {MENU_SECTIONS.map((section) => (

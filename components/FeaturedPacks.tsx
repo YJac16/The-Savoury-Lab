@@ -27,17 +27,28 @@ export function FeaturedPacks() {
           {products.map((product) => (
             <li key={product.orderName}>
               <article className="flex h-full flex-col border border-neutral-muted bg-brand-inverse shadow-soft">
-                <div className="relative aspect-square overflow-hidden bg-neutral-muted">
+                <a
+                  href={`#${product.sectionId}`}
+                  className="relative block aspect-square overflow-hidden bg-neutral-muted focus-visible:outline-offset-4"
+                >
                   <Image
                     src={product.image}
-                    alt={product.imageAlt}
+                    alt=""
                     fill
                     sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
                     className="object-cover object-center"
                   />
-                </div>
+                  <span className="sr-only">
+                    View {product.category} in the menu
+                  </span>
+                </a>
                 <div className="flex flex-1 flex-col gap-2 p-4 sm:p-5">
-                  <p className="eyebrow">{product.category}</p>
+                  <a
+                    href={`#${product.sectionId}`}
+                    className="eyebrow w-fit link-underline"
+                  >
+                    {product.category}
+                  </a>
                   <h3 className="font-display text-2xl leading-tight text-brand">
                     {product.filling}
                   </h3>

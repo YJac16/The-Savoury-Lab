@@ -31,7 +31,7 @@ function packButtonLabel(qty: string) {
 
 export function MenuSection({ section }: { section: MenuSectionData }) {
   return (
-    <article id={section.id} className="scroll-mt-28">
+    <article id={section.id} className="menu-anchor">
       <header className="mb-4 border-b border-brand/10 pb-3">
         <h3 className="text-2xl">{section.title}</h3>
         <p className="mt-1 text-sm text-ink-muted">{section.minimum}</p>
@@ -139,15 +139,26 @@ export function MenuSection({ section }: { section: MenuSectionData }) {
 
 export function ExtrasSection({ extras }: { extras: ExtraRow[] }) {
   return (
-    <article id="extras" className="scroll-mt-28">
+    <article id="extras" className="menu-anchor">
       <header className="mb-4 border-b border-brand/10 pb-3">
         <h3 className="text-2xl">Extras</h3>
+        <p className="mt-1 text-sm text-ink-muted">
+          Pastry is priced per kilogram. Samoosa leaves are priced per 100
+          sheets.
+        </p>
       </header>
 
-      <ul className="space-y-4 min-[431px]:hidden">
+      <ul className="space-y-4">
         {extras.map((item) => (
-          <li key={item.name} className="border border-neutral-muted bg-brand-inverse p-4">
+          <li
+            id={item.id}
+            key={item.id}
+            className="menu-anchor border border-neutral-muted bg-brand-inverse p-4"
+          >
             <h4 className="text-xl">{item.name}</h4>
+            <p className="mt-1 text-sm text-ink-muted">
+              {item.pack} · {item.unit}
+            </p>
             <div className="mt-3">
               <PackOrderLink
                 href={orderUrl({
@@ -163,53 +174,6 @@ export function ExtrasSection({ extras }: { extras: ExtraRow[] }) {
           </li>
         ))}
       </ul>
-
-      <div className="menu-table-scroll -mx-5 hidden overflow-x-auto overscroll-x-contain px-5 min-[431px]:block sm:mx-0 sm:px-0">
-        <div className="rounded-sm border border-neutral-muted shadow-soft">
-          <table className="w-full min-w-max border-collapse text-left text-sm">
-            <caption className="sr-only">
-              Extra pastry items. Tap a price to order on WhatsApp.
-            </caption>
-            <thead>
-              <tr className="bg-brand text-brand-inverse">
-                <th scope="col" className="px-4 py-3 font-medium">
-                  Item
-                </th>
-                <th scope="col" className="px-4 py-3 text-right font-medium">
-                  Price
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {extras.map((item, index) => (
-                <tr
-                  key={item.name}
-                  className={index % 2 === 1 ? "bg-neutral" : "bg-brand-inverse"}
-                >
-                  <th scope="row" className="px-4 py-3.5 font-medium">
-                    {item.name}
-                  </th>
-                  <td className="px-2 py-1 text-right">
-                    <WhatsAppLink
-                      href={orderUrl({
-                        product: item.name,
-                        pack: item.pack,
-                        price: item.price,
-                      })}
-                      className={priceLinkClass}
-                    >
-                      {item.price}
-                      <span className="sr-only">
-                        {` — order ${item.name}, pack size ${item.pack}, ${item.price}, on WhatsApp`}
-                      </span>
-                    </WhatsAppLink>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </article>
   );
 }

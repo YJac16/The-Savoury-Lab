@@ -110,6 +110,16 @@ h4 {
   color: #d4a85c;
 }
 
+.menu-anchor {
+  scroll-margin-top: calc(4rem + env(safe-area-inset-top, 0px) + 4.75rem);
+}
+
+@media (min-width: 768px) {
+  .menu-anchor {
+    scroll-margin-top: 6rem;
+  }
+}
+
 .menu-pack-link {
   display: flex;
   min-height: 3rem;
