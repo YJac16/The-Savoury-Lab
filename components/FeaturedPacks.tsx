@@ -18,7 +18,8 @@ export function FeaturedPacks() {
           <h2 className="text-balance text-3xl sm:text-4xl">Order a pack</h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink-muted">
             Filling, pack size, and price from the menu. Tap to order that pack
-            on WhatsApp. Halaal. Kenilworth collect. All items sold frozen.
+            on WhatsApp. Made with halaal ingredients. Kenilworth collect. All
+            items sold frozen.
           </p>
         </div>
 

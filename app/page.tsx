@@ -50,8 +50,8 @@ export default function HomePage() {
                 volume use the wholesale enquiry.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-ink-muted">
-                Tap a price to order that pack on WhatsApp. Halaal. Kenilworth
-                collect. All items sold frozen.
+                Tap a price to order that pack on WhatsApp. Made with halaal
+                ingredients. Kenilworth collect. All items sold frozen.
               </p>
             </div>
 
@@ -102,7 +102,8 @@ export default function HomePage() {
           <p className="eyebrow mb-3">Contact</p>
           <p className="font-display text-lg">{BRAND.name}</p>
           <p className="mt-3 text-sm text-ink-muted">
-            Halaal · Kenilworth collect · All items sold frozen
+            Made with halaal ingredients · Kenilworth collect · All items sold
+            frozen
           </p>
           <p className="mt-4 text-sm">
             <WhatsAppLink className="link-underline font-medium text-brand hover:text-accent">

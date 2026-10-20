@@ -15,7 +15,8 @@ export function Hero() {
             Frozen Savouries
           </h1>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-inverse/80 sm:mt-5 sm:text-base">
-            Halaal frozen samoosas, pies, spring rolls, and more. Made to order.
+            Frozen samoosas, pies, spring rolls, and more, made with halaal
+            ingredients. Made to order.
             Collect in Kenilworth, Cape Town.
           </p>
           <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2">

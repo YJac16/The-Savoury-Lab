@@ -24,8 +24,9 @@ export function WholesaleCta() {
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-brand-inverse/75 sm:text-lg">
             Partner with {BRAND.name} for mosques, schools, corporate functions,
-            and celebrations. Dedicated service, reliable quality, Halaal
-            certified. Collect in Kenilworth — arrange bulk orders on WhatsApp.
+            and celebrations. Dedicated service, reliable quality, made with
+            halaal ingredients. Collect in Kenilworth — arrange bulk orders on
+            WhatsApp.
           </p>
           <p className="mt-8 text-sm uppercase tracking-[0.16em] text-accent-soft">
             Separate from retail pack prices

@@ -11,7 +11,6 @@ export const BRAND = {
   name: SITE_NAME,
   tagline: TAGLINE,
   subTagline: "Made Fresh. Frozen for Convenience.",
-  halaal: true,
   location: {
     suburb: "Kenilworth",
     city: "Cape Town",
@@ -100,8 +99,8 @@ export const CATEGORIES = [
 
 export const WHY_CHOOSE_US = [
   {
-    title: "Halaal certified",
-    body: "Every product is prepared with Halaal-certified ingredients and processes you can trust.",
+    title: "Halaal ingredients",
+    body: "Made with halaal ingredients. Ask us on WhatsApp about any ingredient.",
   },
   {
     title: "Handcrafted fresh",
@@ -142,9 +141,9 @@ export const FAQ_ITEMS = [
       "Keep frozen at −18°C. Unopened packs typically keep for several months — check the best-before date on each pack. Once thawed, cook and consume promptly; do not refreeze.",
   },
   {
-    question: "Are products Halaal?",
+    question: "Are products halaal certified?",
     answer:
-      "Yes. All The Savoury Lab products are Halaal certified and prepared with Halaal ingredients.",
+      "No. The Savoury Lab does not hold a halaal certificate. Products are made with halaal ingredients. Ask us on WhatsApp about ingredients.",
   },
   {
     question: "Where do I collect?",
