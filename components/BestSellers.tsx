@@ -66,14 +66,18 @@ export function BestSellers() {
           {active ? (
             <CarouselDetailPlate
               title={active.title}
-              description={`Minimum pack of ${active.pack}. All items sold frozen.`}
-              meta={<p>From {active.priceFrom}</p>}
+              description="All items sold frozen."
+              meta={
+                <p>
+                  Pack of {active.pack} · {active.priceFrom}
+                </p>
+              }
               actions={
                 <WhatsAppLink
                   href={orderUrl(active.orderName, active.pack)}
-                  className="btn-primary w-full"
+                  className="btn-primary btn-wrap w-full"
                 >
-                  Order on WhatsApp
+                  Order this pack on WhatsApp
                 </WhatsAppLink>
               }
             />
@@ -105,14 +109,13 @@ export function BestSellers() {
                     {product.title}
                   </p>
                   <p className="text-sm text-ink-muted">
-                    From {product.priceFrom}
-                    <span className="sr-only">{` for pack of ${product.pack}`}</span>
+                    Pack of {product.pack} · {product.priceFrom}
                   </p>
                   <WhatsAppLink
                     href={orderUrl(product.orderName, product.pack)}
-                    className="btn-outline mt-auto w-full"
+                    className="btn-outline btn-wrap mt-auto w-full"
                   >
-                    Order on WhatsApp
+                    Order this pack on WhatsApp
                   </WhatsAppLink>
                 </div>
               </article>

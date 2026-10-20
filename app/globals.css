@@ -32,6 +32,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -40,6 +41,7 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
 h1,
@@ -171,6 +173,13 @@ h4 {
 .btn-outline:hover {
   border-color: var(--color-accent);
   background: var(--color-accent);
+}
+
+.btn-wrap {
+  padding-inline: 0.75rem;
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
 }
 
 .link-underline {

@@ -12,19 +12,19 @@ export function whatsappUrl(message: string) {
   return `${WHATSAPP_BASE}?text=${encodeURIComponent(message)}`;
 }
 
+function packPhrase(pack: string) {
+  return /^\d+$/.test(pack) ? `pack of ${pack}` : pack;
+}
+
 export function orderMessage(product: string, pack?: string) {
   if (pack) {
-    return `Hi The Savoury Lab, I'd like to order ${product} — ${pack}.`;
+    return `Hi The Savoury Lab, I'd like to order ${product} — ${packPhrase(pack)}.`;
   }
   return `Hi The Savoury Lab, I'd like to order ${product}.`;
 }
 
 export function orderUrl(product: string, pack?: string) {
   return whatsappUrl(orderMessage(product, pack));
-}
-
-export function categoryOrderUrl(categoryTitle: string) {
-  return whatsappUrl(`Hi The Savoury Lab, I'd like to order ${categoryTitle}.`);
 }
 
 export const GENERAL_ORDER_URL = whatsappUrl(

@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
       { source: "/account/:path*", destination: "/", permanent: false },
       { source: "/search", destination: "/#menu", permanent: false },
       { source: "/wholesale", destination: "/#wholesale", permanent: false },
+      { source: "/contact", destination: "/#contact", permanent: false },
+      { source: "/about", destination: "/", permanent: false },
     ];
   },
 };

@@ -3,6 +3,7 @@ import { BestSellers } from "@/components/BestSellers";
 import { ExtrasSection, MenuSection } from "@/components/MenuSection";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeaturedCategories } from "@/components/FeaturedCategories";
+import { FeaturedPacks } from "@/components/FeaturedPacks";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { InstagramFeed } from "@/components/InstagramFeed";
@@ -31,6 +32,7 @@ export default function HomePage() {
       <Hero />
 
       <main id="main-content">
+        <FeaturedPacks />
         <FeaturedCategories />
         <BestSellers />
 
